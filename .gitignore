@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+# Binaries
+out/
+build/
+
+# VS folder
+.vs/
+
+# Visual Code folder
+.vscode/
