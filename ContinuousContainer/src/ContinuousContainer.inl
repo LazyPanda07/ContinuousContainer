@@ -3,7 +3,7 @@ namespace containers
 	template<typename ClassT, auto FunctionT, typename... Args>
 	void ContinuousContainer::Block::call(Args&&... args)
 	{
-		(*reinterpret_cast<ClassT*>(&data).*FunctionT)(forward<Args>(args)...);
+		(*reinterpret_cast<ClassT*>(&data).*FunctionT)(std::forward<Args>(args)...);
 	}
 
 	template<typename T, typename... Args>
