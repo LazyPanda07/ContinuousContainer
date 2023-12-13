@@ -25,7 +25,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\ContinuousContainer.inl">
+    <None Include="include\ContinuousContainer.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>
