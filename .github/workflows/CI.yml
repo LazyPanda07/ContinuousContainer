@@ -75,7 +75,7 @@ jobs:
     - uses: LazyPanda07/extract-current-branch@master
 
     - name: Setup release version variable
-      run: echo "CONTINUOUS_CONTAINER_VERSION=$($($($(Select-String -Path .\include\Defines.h -Pattern utilityLibraryVersion) -split '( = )')[2].TrimEnd(';')).Trim('\"'))" >> $Env:GITHUB_ENV
+      run: echo "CONTINUOUS_CONTAINER_VERSION=$($($($(Select-String -Path .\include\ContinuousContainer.h -Pattern continuousContainerVersion) -split '( = )')[2].TrimEnd(';')).Trim('\"'))" >> $Env:GITHUB_ENV
       
     - name: Setup archive name variable
       run: echo "CONTINUOUS_CONTAINER_ARCHIVE_NAME=ContinuousContainer{{ env.CONTINUOUS_CONTAINER_VERSION }}.zip" >> $Env:GITHUB_ENV

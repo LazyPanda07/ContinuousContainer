@@ -3,11 +3,15 @@
 #include <vector>
 #include <cstdint>
 #include <functional>
+#include <string_view>
 
 namespace containers
 {
 	class ContinuousContainer
 	{
+	public:
+		static inline constexpr std::string_view continuousContainerVersion = "0.1.0";
+
 	private:
 		struct Block
 		{
