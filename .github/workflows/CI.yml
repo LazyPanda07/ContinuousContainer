@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  push:
+    branches: [master, dev]
+  
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
+    steps:
+    - uses: actions/checkout@v3
+  
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@main
+
+    - name: Build
+      run: msbuild /p:Configuration=${{ matrix.configuration }} /p:Platform=x64
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.configuration }}
+        path: bin/${{ matrix.configuration }}-x64
+
+
+  tests:
+    runs-on: windows-latest
+    needs: build
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
+    steps:
+    - uses: actions/checkout@v3
+  
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@main
+
+    - name: Download artifacts
+      uses: actions/download-artifact@v3
+      with: 
+        name: ${{ matrix.configuration }}
+
+    - name: Setup GoogleTest configuration
+      run: echo "GOOGLE_TEST_CONFIGURATION=$(if ("${{ matrix.configuration }}".Contains("Release")) { echo "Release" } else { echo "Debug" })" >> $Env:GITHUB_ENV
+
+    - name: Build GoogleTest
+      run: |
+          mkdir test && `
+          cd tests && `
+          git clone https://github.com/google/googletest.git -b v1.14.x && cd googletest && mkdir build && cd build && `
+          cmake -Dgtest_force_shared_crt=ON -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/tests/gtest .. && `
+          msbuild /p:Configuration=${{ env.GOOGLE_TEST_CONFIGURATION }} /p:Platform=x64 INSTALL.vcxproj
+          
+  #  - name: Tests
+  #    working-directory: ${{ github.workspace }}/tests
+  #    run: |
+  #        mkdir build && cd build && cmake -DTEST_LIBRARY_PATH=${{ github.workspace }}/UtilityLibrary -DCONFIGURATION=${{ env.GOOGLE_TEST_CONFIGURATION }} .. && `
+  #        msbuild /p:Configuration=${{ env.GOOGLE_TEST_CONFIGURATION }} /p:Platform=x64 UtilityLibraryTests.sln && cd ${{ env.GOOGLE_TEST_CONFIGURATION }} && `
+  #        .\UtilityLibraryTests.exe --int 1 --string data --bool --float 5.5 --values 1 --values 2 --values 3 --values 4 --values 5 --values 6
+
+
+  publish:
+    runs-on: windows-latest
+    permissions: write-all
+    needs: [build, tests]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: LazyPanda07/extract-current-branch@master
+
+    - name: Setup release version variable
+      run: echo "CONTINUOUS_CONTAINER_VERSION=$($($($(Select-String -Path .\include\Defines.h -Pattern utilityLibraryVersion) -split '( = )')[2].TrimEnd(';')).Trim('\"'))" >> $Env:GITHUB_ENV
+      
+    - name: Setup archive name variable
+      run: echo "CONTINUOUS_CONTAINER_ARCHIVE_NAME=ContinuousContainer{{ env.CONTINUOUS_CONTAINER_VERSION }}.zip" >> $Env:GITHUB_ENV
+
+    - name: Download artifacts
+      if: ${{ env.CURRENT_BRANCH == 'master' }}
+      uses: actions/download-artifact@v3
+      
+    - name: Create zip
+      if: ${{ env.CURRENT_BRANCH == 'master' }}
+      run: Compress-Archive -Path @("Debug", "Release", "include") -DestinationPath ${{ env.CONTINUOUS_CONTAINER_ARCHIVE_NAME }}
+
+    - name: Publish
+      if: ${{ env.CURRENT_BRANCH == 'master' }}
+      uses: svenstaro/upload-release-action@master
+      with:
+        tag: v${{ env.CONTINUOUS_CONTAINER_VERSION }}
+        file: ${{ env.CONTINUOUS_CONTAINER_ARCHIVE_NAME }}
+        
