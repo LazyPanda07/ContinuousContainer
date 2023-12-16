@@ -38,3 +38,15 @@ public:
 
 	~AnotherDerived() = default;
 };
+
+class Accumulated
+{
+private:
+	int& out;
+	int value;
+
+public:
+	Accumulated(int& out, int value);
+
+	~Accumulated();
+};

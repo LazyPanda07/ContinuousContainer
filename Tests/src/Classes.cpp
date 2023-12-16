@@ -27,3 +27,15 @@ int AnotherDerived::getValue() const
 {
 	return static_cast<int>(first + second);
 }
+
+Accumulated::Accumulated(int& out, int value) :
+	out(out),
+	value(value)
+{
+
+}
+
+Accumulated::~Accumulated()
+{
+	out += value;
+}

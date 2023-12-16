@@ -5,6 +5,16 @@
 #include "ContinuousContainer.h"
 #include "Classes.h"
 
+TEST(ContinuousContainer, ConstructorInitializerList)
+{
+    containers::ContinuousContainer container({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+
+    for (size_t i = 0; i < container.size(); i++)
+    {
+        ASSERT_TRUE(container.getValue<int>(i) == i);
+    }
+}
+
 TEST(ContinuousContainer, Size)
 {
     containers::ContinuousContainer container;
@@ -50,4 +60,47 @@ TEST(ContinuousContainer, LargeContainer)
     }
 
     ASSERT_TRUE(std::ranges::equal(container.call<BaseClass, &BaseClass::getValue, int>(), results));
+}
+
+TEST(ContinuousContainer, Remove)
+{
+    containers::ContinuousContainer container;
+    std::vector<int> results;
+
+    for (size_t i = 0; i < 100; i++)
+    {
+        results.push_back(container.add<BaseClass>().getValue());
+    }
+
+    for (size_t i = 0; i < 100; i++)
+    {
+        results.push_back(container.add<Derived>("1000").getValue());
+    }
+
+    for (size_t i = 0; i < 10; i++)
+    {
+        container.remove(i);
+        container.remove(i + 100);
+
+        results.erase(results.begin() + i);
+        results.erase(results.begin() + i + 100);
+    }
+
+    ASSERT_TRUE(std::ranges::equal(container.call<BaseClass, &BaseClass::getValue, int>(), results));
+}
+
+TEST(ContinuousContainer, Destructor)
+{
+    int result = 0;
+
+    {
+        containers::ContinuousContainer container;
+
+        for (size_t i = 0; i < 10; i++)
+        {
+            container.add<Accumulated>(result, 1);
+        }
+    }
+
+    ASSERT_TRUE(result == 10);
 }

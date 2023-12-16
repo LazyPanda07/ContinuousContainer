@@ -7,6 +7,9 @@
 
 namespace containers
 {
+	/**
+	 * @brief Stores any object in continuous block of memory
+	*/
 	class ContinuousContainer
 	{
 	public:
@@ -31,15 +34,27 @@ namespace containers
 			ReturnT call(Args&&... args) const;
 		};
 
+		struct MetaInformation
+		{
+			size_t distance;
+			size_t objectSize;
+			std::function<void(void*)> destructor;
+		};
+
 	private:
 		std::vector<uint8_t> buffer;
-		std::vector<size_t> distances;
+		std::vector<MetaInformation> meta;
 
 	public:
 		ContinuousContainer(size_t capacity = 0);
 
+		template<typename T>
+		ContinuousContainer(std::initializer_list<T> objects);
+
 		template<typename T, typename... Args>
 		T& add(Args&&... args);
+
+		void remove(size_t index);
 
 		template<typename ClassT, auto FunctionT, typename... Args>
 		void call(Args&&... args);
@@ -54,6 +69,8 @@ namespace containers
 		std::vector<ReturnT> call(Args&&... args) const;
 
 		size_t size() const;
+
+		size_t sizeInBytes() const;
 
 		template<typename T>
 		const T& getValue(size_t index) const;
