@@ -23,9 +23,15 @@
     <None Include="include\ContinuousContainer.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="include\ContinuousContainerIterator.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ContinuousContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ContinuousContainerIterator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
