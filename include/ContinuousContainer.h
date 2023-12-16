@@ -23,6 +23,12 @@ namespace containers
 
 			template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
 			ReturnT call(Args&&... args);
+
+			template<typename ClassT, auto FunctionT, typename... Args>
+			void call(Args&&... args) const;
+
+			template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
+			ReturnT call(Args&&... args) const;
 		};
 
 	private:
@@ -40,6 +46,12 @@ namespace containers
 
 		template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
 		std::vector<ReturnT> call(Args&&... args);
+
+		template<typename ClassT, auto FunctionT, typename... Args>
+		void call(Args&&... args) const;
+
+		template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
+		std::vector<ReturnT> call(Args&&... args) const;
 
 		size_t size() const;
 

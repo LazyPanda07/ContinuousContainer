@@ -12,6 +12,18 @@ namespace containers
 		return (*reinterpret_cast<ClassT*>(&data).*FunctionT)(std::forward<Args>(args)...);
 	}
 
+	template<typename ClassT, auto FunctionT, typename... Args>
+	void ContinuousContainer::Block::call(Args&&... args) const
+	{
+		(*reinterpret_cast<const ClassT*>(&data).*FunctionT)(std::forward<Args>(args)...);
+	}
+
+	template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
+	ReturnT ContinuousContainer::Block::call(Args&&... args) const
+	{
+		return (*reinterpret_cast<const ClassT*>(&data).*FunctionT)(std::forward<Args>(args)...);
+	}
+
 	template<typename T, typename... Args>
 	T& ContinuousContainer::add(Args&&... args)
 	{
@@ -47,11 +59,43 @@ namespace containers
 	{
 		std::vector<ReturnT> result;
 
-		result.reserve(size);
+		result.reserve(this->size());
 
 		for (size_t i = 0; i < buffer.size();)
 		{
 			Block& block = *reinterpret_cast<Block*>(buffer.data() + i);
+
+			result.push_back(block.call<ClassT, FunctionT, ReturnT>(std::forward<Args>(args)...));
+
+			i += sizeof(size_t) + block.size;
+		}
+
+		return result;
+	}
+
+	template<typename ClassT, auto FunctionT, typename... Args>
+	void ContinuousContainer::call(Args&&... args) const
+	{
+		for (size_t i = 0; i < buffer.size();)
+		{
+			const Block& block = *reinterpret_cast<const Block*>(buffer.data() + i);
+
+			block.call<ClassT, FunctionT>(std::forward<Args>(args)...);
+
+			i += sizeof(size_t) + block.size;
+		}
+	}
+
+	template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
+	std::vector<ReturnT> ContinuousContainer::call(Args&&... args) const
+	{
+		std::vector<ReturnT> result;
+
+		result.reserve(this->size());
+
+		for (size_t i = 0; i < buffer.size();)
+		{
+			const Block& block = *reinterpret_cast<const Block*>(buffer.data() + i);
 
 			result.push_back(block.call<ClassT, FunctionT, ReturnT>(std::forward<Args>(args)...));
 

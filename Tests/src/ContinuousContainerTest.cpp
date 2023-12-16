@@ -1,5 +1,7 @@
 #include "gtest/gtest.h"
 
+#include <algorithm>
+
 #include "ContinuousContainer.h"
 #include "Classes.h"
 
@@ -23,8 +25,8 @@ TEST(ContinuousContainer, Getters)
     container.add<AnotherDerived>(0.15, 0.85);
 
     ASSERT_TRUE(container.getValue<BaseClass>(0).getValue() == 5);
-    ASSERT_TRUE(container.getValue<BaseClass>(1).getValue() == 123);
-    ASSERT_TRUE(container.getValue<BaseClass>(2).getValue() == 1);
+    ASSERT_TRUE(container.getValue<Derived>(1).getValue() == 123);
+    ASSERT_TRUE(container.getValue<AnotherDerived>(2).getValue() == 1);
 }
 
 TEST(ContinuousContainer, LargeContainer)
@@ -34,27 +36,18 @@ TEST(ContinuousContainer, LargeContainer)
 
     for (size_t i = 0; i < 10'000; i++)
     {
-        container.add<BaseClass>();
-
-        results.push_back(5);
+        results.push_back(container.add<BaseClass>().getValue());
     }
 
     for (size_t i = 0; i < 10'000; i++)
     {
-        container.add<Derived>("1000");
-
-        results.push_back(1000);
+        results.push_back(container.add<Derived>("1000").getValue());
     }
 
     for (size_t i = 0; i < 10'000; i++)
     {
-        container.add<AnotherDerived>(0.5, 0.5);
-
-        results.push_back(1);
+        results.push_back(container.add<AnotherDerived>(0.5, 0.5).getValue());
     }
 
-    for (size_t i = 0; i < container.size(); i++)
-    {
-        ASSERT_TRUE(container.getValue<BaseClass>(i).getValue() == results[i]);
-    }
+    ASSERT_TRUE(std::ranges::equal(container.call<BaseClass, &BaseClass::getValue, int>(), results));
 }
