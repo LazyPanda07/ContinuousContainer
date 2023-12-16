@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['remove_0',['remove',['../classcontainers_1_1_continuous_container.html#a9118ab4665fddf5409caae14b07b4e7d',1,'containers::ContinuousContainer']]]
+  ['remove_0',['remove',['../classdata__structures_1_1_continuous_container.html#a364bc0c74f28b534a7fd7a51f6bccf52',1,'data_structures::ContinuousContainer']]]
 ];

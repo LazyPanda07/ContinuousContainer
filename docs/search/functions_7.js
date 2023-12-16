@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['size_0',['size',['../classcontainers_1_1_continuous_container.html#a062fdbe7cb12e50a6c9261fadeacc4f8',1,'containers::ContinuousContainer']]],
-  ['sizeinbytes_1',['sizeInBytes',['../classcontainers_1_1_continuous_container.html#a3d5b017f50fe6aa6f8b9afc8c011ef38',1,'containers::ContinuousContainer']]]
+  ['size_0',['size',['../classdata__structures_1_1_continuous_container.html#aee193cc0e9f2c7c8db1f123bae4acd1a',1,'data_structures::ContinuousContainer']]],
+  ['sizeinbytes_1',['sizeInBytes',['../classdata__structures_1_1_continuous_container.html#a0bcb817b3210002d4cf621f62d850df1',1,'data_structures::ContinuousContainer']]]
 ];

@@ -1,4 +1,4 @@
-namespace containers
+namespace data_structures
 {
 	template<typename ClassT, auto FunctionT, typename... Args>
 	inline void ContinuousContainer::Block::call(Args&&... args)
@@ -22,6 +22,24 @@ namespace containers
 	ReturnT ContinuousContainer::Block::call(Args&&... args) const
 	{
 		return (*reinterpret_cast<const ClassT*>(&data).*FunctionT)(std::forward<Args>(args)...);
+	}
+
+	template<typename T>
+	T& ContinuousContainer::ContinuousContainerIterator::as()
+	{
+		return *reinterpret_cast<T*>(buffer + sizeof(size_t));
+	}
+
+	template<typename T>
+	const T& ContinuousContainer::ContinuousContainerIterator::as() const
+	{
+		return *reinterpret_cast<const T*>(buffer + sizeof(size_t));
+	}
+
+	template<typename T>
+	const T& ContinuousContainer::ConstContinuousContainerIterator::as() const
+	{
+		return *reinterpret_cast<const T*>(buffer + sizeof(size_t));
 	}
 
 	template<typename T>

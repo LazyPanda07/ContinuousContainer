@@ -2,8 +2,99 @@
 
 #include <algorithm>
 
-namespace containers
+namespace data_structures
 {
+	using ContinuousContainerIterator = ContinuousContainer::ContinuousContainerIterator;
+	using ConstContinuousContainerIterator = ContinuousContainer::ConstContinuousContainerIterator;
+
+	ContinuousContainerIterator::ContinuousContainerIterator(uint8_t* buffer) :
+		buffer(buffer)
+	{
+
+	}
+
+	ContinuousContainerIterator& ContinuousContainerIterator::operator*()
+	{
+		return *this;
+	}
+
+	const ContinuousContainerIterator& ContinuousContainerIterator::operator*() const
+	{
+		return *this;
+	}
+
+	bool ContinuousContainerIterator::operator==(const ContinuousContainerIterator& other) const
+	{
+		return buffer == other.buffer;
+	}
+
+	bool ContinuousContainerIterator::operator!=(const ContinuousContainerIterator& other) const
+	{
+		return !((*this) == other);
+	}
+
+	ContinuousContainerIterator& ContinuousContainerIterator::operator++()
+	{
+		Block& block = *reinterpret_cast<Block*>(buffer);
+
+		buffer += block.size + sizeof(size_t);
+
+		return *this;
+	}
+
+	ContinuousContainerIterator ContinuousContainerIterator::operator++(int)
+	{
+		ContinuousContainerIterator it(*this);
+
+		++(*this);
+
+		return it;
+	}
+
+	ConstContinuousContainerIterator::ConstContinuousContainerIterator(const uint8_t* buffer) :
+		buffer(buffer)
+	{
+
+	}
+
+	ConstContinuousContainerIterator& ConstContinuousContainerIterator::operator*()
+	{
+		return *this;
+	}
+
+	const ConstContinuousContainerIterator& ConstContinuousContainerIterator::operator*() const
+	{
+		return *this;
+	}
+
+	bool ConstContinuousContainerIterator::operator==(const ConstContinuousContainerIterator& other) const
+	{
+		return buffer == other.buffer;
+	}
+
+	bool ConstContinuousContainerIterator::operator!=(const ConstContinuousContainerIterator& other) const
+	{
+		return !((*this) == other);
+	}
+
+	ConstContinuousContainerIterator& ConstContinuousContainerIterator::operator++()
+	{
+		const Block& block = *reinterpret_cast<const Block*>(buffer);
+
+		buffer += block.size + sizeof(size_t);
+
+		return *this;
+	}
+
+	ConstContinuousContainerIterator ConstContinuousContainerIterator::operator++(int)
+	{
+		ConstContinuousContainerIterator it(*this);
+
+		++(*this);
+
+		return it;
+	}
+
 	ContinuousContainer::ContinuousContainer(size_t capacity)
 	{
 		buffer.reserve(capacity);
@@ -54,7 +145,7 @@ namespace containers
 			return ContinuousContainerIterator();
 		}
 
-		return ContinuousContainerIterator(buffer.data() + sizeof(size_t), meta.front().objectSize);
+		return ContinuousContainerIterator(buffer.data());
 	}
 
 	ContinuousContainerIterator ContinuousContainer::end()
@@ -64,7 +155,7 @@ namespace containers
 			return ContinuousContainerIterator();
 		}
 
-		return ContinuousContainerIterator(buffer.data() + meta.back().distance + meta.back().objectSize + sizeof(size_t), 0);
+		return ContinuousContainerIterator(buffer.data() + buffer.size());
 	}
 
 	ConstContinuousContainerIterator ContinuousContainer::begin() const
@@ -74,7 +165,7 @@ namespace containers
 			return ConstContinuousContainerIterator();
 		}
 
-		return ConstContinuousContainerIterator(buffer.data() + sizeof(size_t), meta.front().objectSize);
+		return ConstContinuousContainerIterator(buffer.data());
 	}
 
 	ConstContinuousContainerIterator ContinuousContainer::end() const
@@ -84,6 +175,6 @@ namespace containers
 			return ConstContinuousContainerIterator();
 		}
 
-		return ConstContinuousContainerIterator(buffer.data() + meta.back().distance + meta.back().objectSize + sizeof(size_t), 0);
+		return ConstContinuousContainerIterator(buffer.data() + buffer.size());
 	}
 }

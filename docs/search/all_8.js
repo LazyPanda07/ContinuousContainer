@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['_7econstcontinuouscontaineriterator_0',['~ConstContinuousContainerIterator',['../classcontainers_1_1_const_continuous_container_iterator.html#aa44dd7538a209d290625f0ff4b1091be',1,'containers::ConstContinuousContainerIterator']]],
-  ['_7econtinuouscontainer_1',['~ContinuousContainer',['../classcontainers_1_1_continuous_container.html#abdc6b24745273cd6b22db0524700e910',1,'containers::ContinuousContainer']]],
-  ['_7econtinuouscontaineriterator_2',['~ContinuousContainerIterator',['../classcontainers_1_1_continuous_container_iterator.html#a305902baaf41f4f0485ddf3b995cf953',1,'containers::ContinuousContainerIterator']]]
+  ['size_0',['size',['../classdata__structures_1_1_continuous_container.html#aee193cc0e9f2c7c8db1f123bae4acd1a',1,'data_structures::ContinuousContainer']]],
+  ['sizeinbytes_1',['sizeInBytes',['../classdata__structures_1_1_continuous_container.html#a0bcb817b3210002d4cf621f62d850df1',1,'data_structures::ContinuousContainer']]]
 ];

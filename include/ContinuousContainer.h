@@ -1,14 +1,10 @@
 #pragma once
 
 #include <vector>
-#include <cstdint>
 #include <functional>
 #include <string_view>
 
-#include "iterators/ContinuousContainerIterator.h"
-#include "iterators/ConstContinuousContainerIterator.h"
-
-namespace containers
+namespace data_structures
 {
 	/**
 	 * @brief Stores any object in continuous block of memory
@@ -50,6 +46,83 @@ namespace containers
 	private:
 		std::vector<uint8_t> buffer;
 		std::vector<MetaInformation> meta;
+
+	public:
+		/**
+		 * @brief Iterator
+		*/
+		class ContinuousContainerIterator
+		{
+		private:
+			uint8_t* buffer;
+
+		public:
+			ContinuousContainerIterator(uint8_t* buffer = nullptr);
+
+			/**
+			 * @brief Get value
+			 * @tparam T 
+			 * @return 
+			*/
+			template<typename T>
+			T& as();
+
+			/**
+			 * @brief Get value
+			 * @tparam T 
+			 * @return 
+			*/
+			template<typename T>
+			const T& as() const;
+
+			ContinuousContainerIterator& operator*();
+
+			const ContinuousContainerIterator& operator*() const;
+
+			bool operator==(const ContinuousContainerIterator& other) const;
+
+			bool operator!=(const ContinuousContainerIterator& other) const;
+
+			ContinuousContainerIterator& operator++();
+
+			ContinuousContainerIterator operator++(int);
+
+			~ContinuousContainerIterator() = default;
+		};
+
+		/**
+		 * @brief Const iterator
+		*/
+		class ConstContinuousContainerIterator
+		{
+		private:
+			const uint8_t* buffer;
+
+		public:
+			ConstContinuousContainerIterator(const uint8_t* buffer = nullptr);
+
+			/**
+			 * @brief Get value
+			 * @tparam T 
+			 * @return 
+			*/
+			template<typename T>
+			const T& as() const;
+
+			ConstContinuousContainerIterator& operator*();
+
+			const ConstContinuousContainerIterator& operator*() const;
+
+			bool operator==(const ConstContinuousContainerIterator& other) const;
+
+			bool operator!=(const ConstContinuousContainerIterator& other) const;
+
+			ConstContinuousContainerIterator& operator++();
+
+			ConstContinuousContainerIterator operator++(int);
+
+			~ConstContinuousContainerIterator() = default;
+		};
 
 	public:
 		/**

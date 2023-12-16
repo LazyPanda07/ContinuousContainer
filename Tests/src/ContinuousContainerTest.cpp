@@ -8,7 +8,7 @@
 
 TEST(ContinuousContainer, ConstructorInitializerList)
 {
-    containers::ContinuousContainer container({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+    data_structures::ContinuousContainer container({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
 
     for (size_t i = 0; i < container.size(); i++)
     {
@@ -18,7 +18,7 @@ TEST(ContinuousContainer, ConstructorInitializerList)
 
 TEST(ContinuousContainer, Size)
 {
-    containers::ContinuousContainer container;
+    data_structures::ContinuousContainer container;
 
     container.add<BaseClass>();
     container.add<Derived>("123");
@@ -29,7 +29,7 @@ TEST(ContinuousContainer, Size)
 
 TEST(ContinuousContainer, SizeInBytes)
 {
-    containers::ContinuousContainer container;
+    data_structures::ContinuousContainer container;
 
     container.add<BaseClass>();
     container.add<Derived>("123");
@@ -40,7 +40,7 @@ TEST(ContinuousContainer, SizeInBytes)
 
 TEST(ContinuousContainer, Getters)
 {
-    containers::ContinuousContainer container;
+    data_structures::ContinuousContainer container;
 
     container.add<BaseClass>();
     container.add<Derived>("123");
@@ -53,7 +53,7 @@ TEST(ContinuousContainer, Getters)
 
 TEST(ContinuousContainer, LargeContainer)
 {
-    containers::ContinuousContainer container;
+    data_structures::ContinuousContainer container;
     std::vector<int> results;
 
     for (size_t i = 0; i < 10'000; i++)
@@ -76,7 +76,7 @@ TEST(ContinuousContainer, LargeContainer)
 
 TEST(ContinuousContainer, Remove)
 {
-    containers::ContinuousContainer container;
+    data_structures::ContinuousContainer container;
     std::vector<int> results;
 
     for (size_t i = 0; i < 100; i++)
@@ -103,7 +103,7 @@ TEST(ContinuousContainer, Remove)
 
 TEST(ContinuousContainer, Iterators)
 {
-    containers::ContinuousContainer container;
+    data_structures::ContinuousContainer container;
     std::mt19937 random;
 
     for (size_t i = 0; i < 100; i++)
@@ -130,14 +130,16 @@ TEST(ContinuousContainer, Iterators)
         }
     }
 
-    for (containers::ContinuousContainerIterator it = container.begin(); it != container.end(); ++it)
+    for (data_structures::ContinuousContainer::ContinuousContainerIterator it = container.begin(); it != container.end(); ++it)
     {
         int value = it.as<BaseClass>().getValue();
 
         ASSERT_TRUE(value == 5 || value == 100 || value == 2);
     }
 
-    for (containers::ConstContinuousContainerIterator it = const_cast<const containers::ContinuousContainer&>(container).begin(); it != const_cast<const containers::ContinuousContainer&>(container).end(); ++it)
+    for (data_structures::ContinuousContainer::ConstContinuousContainerIterator it = const_cast<const data_structures::ContinuousContainer&>(container).begin();
+        it != const_cast<const data_structures::ContinuousContainer&>(container).end();
+        ++it)
     {
         int value = it.as<BaseClass>().getValue();
 
@@ -164,7 +166,7 @@ TEST(ContinuousContainer, Destructor)
     int result = 0;
 
     {
-        containers::ContinuousContainer container;
+        data_structures::ContinuousContainer container;
 
         for (size_t i = 0; i < 10; i++)
         {
