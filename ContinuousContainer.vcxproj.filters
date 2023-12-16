@@ -18,12 +18,21 @@
     <ClCompile Include="src\ContinuousContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\iterators\ContinuousContainerIterator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\iterators\ConstContinuousContainerIterator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\ContinuousContainer.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="include\ContinuousContainerIterator.inl">
+    <None Include="include\iterators\ContinuousContainerIterator.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\iterators\ConstContinuousContainerIterator.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>
@@ -31,7 +40,10 @@
     <ClInclude Include="include\ContinuousContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ContinuousContainerIterator.h">
+    <ClInclude Include="include\iterators\ContinuousContainerIterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\iterators\ConstContinuousContainerIterator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

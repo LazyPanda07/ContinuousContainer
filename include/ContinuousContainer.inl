@@ -126,43 +126,4 @@ namespace containers
 
 		return *reinterpret_cast<T*>(&block.data);
 	}
-
-	template<typename T>
-	ContinuousContainerIterator<T> ContinuousContainer::begin()
-	{
-		if (meta.empty())
-		{
-			return ContinuousContainerIterator<T>();
-		}
-
-		return ContinuousContainerIterator<T>(buffer.data() + sizeof(size_t), meta.front().objectSize);
-	}
-
-	template<typename T>
-	ContinuousContainerIterator<T> ContinuousContainer::end()
-	{
-		if (meta.empty())
-		{
-			return ContinuousContainerIterator<T>();
-		}
-
-		return ContinuousContainerIterator<T>(buffer.data() + meta.back().distance + meta.back().objectSize + sizeof(size_t), 0);
-	}
-
-	template<typename T>
-	ContinuousContainerIterator<T> ContinuousContainer::begin() const
-	{
-		if (meta.empty())
-		{
-			return ContinuousContainerIterator<T, true>();
-		}
-
-		return ContinuousContainerIterator<T, true>(buffer.data() + sizeof(size_t), meta.front().objectSize);
-	}
-
-	template<typename T>
-	ContinuousContainerIterator<T> ContinuousContainer::end() const
-	{
-		return ContinuousContainerIterator<T>(buffer.data() + meta.back().distance + meta.back().objectSize + sizeof(size_t), 0);
-	}
 }

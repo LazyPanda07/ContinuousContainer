@@ -46,4 +46,44 @@ namespace containers
 			destructor(reinterpret_cast<void*>(&block.data));
 		}
 	}
+
+	ContinuousContainerIterator ContinuousContainer::begin()
+	{
+		if (meta.empty())
+		{
+			return ContinuousContainerIterator();
+		}
+
+		return ContinuousContainerIterator(buffer.data() + sizeof(size_t), meta.front().objectSize);
+	}
+
+	ContinuousContainerIterator ContinuousContainer::end()
+	{
+		if (meta.empty())
+		{
+			return ContinuousContainerIterator();
+		}
+
+		return ContinuousContainerIterator(buffer.data() + meta.back().distance + meta.back().objectSize + sizeof(size_t), 0);
+	}
+
+	ConstContinuousContainerIterator ContinuousContainer::begin() const
+	{
+		if (meta.empty())
+		{
+			return ConstContinuousContainerIterator();
+		}
+
+		return ConstContinuousContainerIterator(buffer.data() + sizeof(size_t), meta.front().objectSize);
+	}
+
+	ConstContinuousContainerIterator ContinuousContainer::end() const
+	{
+		if (meta.empty())
+		{
+			return ConstContinuousContainerIterator();
+		}
+
+		return ConstContinuousContainerIterator(buffer.data() + meta.back().distance + meta.back().objectSize + sizeof(size_t), 0);
+	}
 }

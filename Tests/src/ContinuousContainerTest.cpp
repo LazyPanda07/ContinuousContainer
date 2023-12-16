@@ -130,9 +130,23 @@ TEST(ContinuousContainer, Iterators)
         }
     }
 
-    for (containers::ContinuousContainerIterator<BaseClass> it = container.begin<BaseClass>(); it != container.end<BaseClass>(); ++it)
+    for (containers::ContinuousContainerIterator it = container.begin(); it != container.end(); ++it)
     {
-        int value = it->getValue();
+        int value = it.as<BaseClass>().getValue();
+
+        ASSERT_TRUE(value == 5 || value == 100 || value == 2);
+    }
+
+    for (const auto& it : container)
+    {
+        int value = it.as<BaseClass>().getValue();
+
+        ASSERT_TRUE(value == 5 || value == 100 || value == 2);
+    }
+
+    for (auto& it : container)
+    {
+        int value = it.as<BaseClass>().getValue();
 
         ASSERT_TRUE(value == 5 || value == 100 || value == 2);
     }

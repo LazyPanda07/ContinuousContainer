@@ -5,7 +5,8 @@
 #include <functional>
 #include <string_view>
 
-#include "ContinuousContainerIterator.h"
+#include "iterators/ContinuousContainerIterator.h"
+#include "iterators/ConstContinuousContainerIterator.h"
 
 namespace containers
 {
@@ -80,17 +81,14 @@ namespace containers
 		template<typename T>
 		T& getValue(size_t index);
 
-		template<typename T>
-		ContinuousContainerIterator<T> begin();
+		ContinuousContainerIterator begin();
 
-		template<typename T>
-		ContinuousContainerIterator<T> end();
+		ContinuousContainerIterator end();
 
-		template<typename T>
-		ContinuousContainerIterator<T> begin() const;
+		ConstContinuousContainerIterator begin() const;
 
-		template<typename T>
-		ContinuousContainerIterator<T> end() const;
+		ConstContinuousContainerIterator end() const;
+
 		~ContinuousContainer();
 	};
 }

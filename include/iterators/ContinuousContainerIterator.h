@@ -1,10 +1,9 @@
 #pragma once
 
-#include <vector>
+#include <cstdint>
 
 namespace containers
 {
-	template<typename T, bool isConst = false>
 	class ContinuousContainerIterator
 	{
 	private:
@@ -14,15 +13,15 @@ namespace containers
 	public:
 		ContinuousContainerIterator(uint8_t* buffer = nullptr, size_t objectSize = 0);
 
-		template<typename std::enable_if_t<!isConst>>
-		T* operator->();
+		template<typename T>
+		T& as();
 
-		const T* operator->() const;
+		template<typename T>
+		const T& as() const;
 
-		template<typename std::enable_if_t<!isConst>>
-		T& operator*();
+		ContinuousContainerIterator& operator*();
 
-		const T& operator*() const;
+		const ContinuousContainerIterator& operator*() const;
 
 		bool operator==(const ContinuousContainerIterator& other) const;
 
@@ -32,7 +31,7 @@ namespace containers
 
 		ContinuousContainerIterator operator++(int);
 
-		ContinuousContainerIterator() = default;
+		~ContinuousContainerIterator() = default;
 	};
 }
 

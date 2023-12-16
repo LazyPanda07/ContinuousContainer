@@ -87,14 +87,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\ContinuousContainer.cpp" />
+    <ClCompile Include="src\iterators\ConstContinuousContainerIterator.cpp" />
+    <ClCompile Include="src\iterators\ContinuousContainerIterator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\ContinuousContainer.inl" />
-    <None Include="include\ContinuousContainerIterator.inl" />
+    <None Include="include\iterators\ConstContinuousContainerIterator.inl" />
+    <None Include="include\iterators\ContinuousContainerIterator.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ContinuousContainer.h" />
-    <ClInclude Include="include\ContinuousContainerIterator.h" />
+    <ClInclude Include="include\iterators\ConstContinuousContainerIterator.h" />
+    <ClInclude Include="include\iterators\ContinuousContainerIterator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
