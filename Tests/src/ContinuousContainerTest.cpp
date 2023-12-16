@@ -35,7 +35,7 @@ TEST(ContinuousContainer, SizeInBytes)
     container.add<Derived>("123");
     container.add<AnotherDerived>(0.15, 0.85);
 
-    ASSERT_TRUE(container.sizeInBytes() == sizeof(BaseClass) + sizeof(Derived) + sizeof(AnotherDerived));
+    ASSERT_TRUE(container.sizeInBytes() == sizeof(BaseClass) + sizeof(Derived) + sizeof(AnotherDerived) + sizeof(size_t) * 3);
 }
 
 TEST(ContinuousContainer, Getters)
@@ -131,6 +131,13 @@ TEST(ContinuousContainer, Iterators)
     }
 
     for (containers::ContinuousContainerIterator it = container.begin(); it != container.end(); ++it)
+    {
+        int value = it.as<BaseClass>().getValue();
+
+        ASSERT_TRUE(value == 5 || value == 100 || value == 2);
+    }
+
+    for (containers::ConstContinuousContainerIterator it = const_cast<const containers::ContinuousContainer&>(container).begin(); it != const_cast<const containers::ContinuousContainer&>(container).end(); ++it)
     {
         int value = it.as<BaseClass>().getValue();
 
