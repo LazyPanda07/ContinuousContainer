@@ -32,8 +32,6 @@
 *.app
 
 # Binaries
-out/
-build/
 bin/
 
 # VS folder
@@ -41,3 +39,9 @@ bin/
 
 # Visual Code folder
 .vscode/
+
+# .sln file
+ContinuousContainer.sln
+
+# Tests
+Tests/gtest/
