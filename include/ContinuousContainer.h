@@ -28,7 +28,6 @@ namespace containers
 	private:
 		std::vector<uint8_t> buffer;
 		std::vector<size_t> distances;
-		size_t size;
 
 	public:
 		ContinuousContainer(size_t capacity = 0);
@@ -41,6 +40,8 @@ namespace containers
 
 		template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
 		std::vector<ReturnT> call(Args&&... args);
+
+		size_t size() const;
 
 		template<typename T>
 		const T& getValue(size_t index) const;

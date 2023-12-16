@@ -26,8 +26,6 @@ namespace containers
 
 		memcpy(data - sizeof(size_t), &instanceSize, sizeof(instanceSize));
 
-		size++;
-
 		return *(new (data) T(std::forward<Args>(args)...));
 	}
 
