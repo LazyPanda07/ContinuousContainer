@@ -29,7 +29,7 @@ namespace containers
 	{
 		for (const T& object : objects)
 		{
-			this->add(object);
+			this->add<T>(object);
 		}
 	}
 
