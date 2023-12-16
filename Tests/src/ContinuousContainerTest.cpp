@@ -3,7 +3,7 @@
 #include "ContinuousContainer.h"
 #include "Classes.h"
 
-TEST(ContinuousContainer, Add)
+TEST(ContinuousContainer, Size)
 {
     containers::ContinuousContainer container;
 
@@ -23,8 +23,8 @@ TEST(ContinuousContainer, Getters)
     container.add<AnotherDerived>(0.15, 0.85);
 
     ASSERT_TRUE(container.getValue<BaseClass>(0).getValue() == 5);
-    ASSERT_TRUE(container.getValue<BaseClass>(0).getValue() == 123);
-    ASSERT_TRUE(container.getValue<BaseClass>(0).getValue() == 1);
+    ASSERT_TRUE(container.getValue<BaseClass>(1).getValue() == 123);
+    ASSERT_TRUE(container.getValue<BaseClass>(2).getValue() == 1);
 }
 
 TEST(ContinuousContainer, LargeContainer)
