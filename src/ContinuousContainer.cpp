@@ -7,8 +7,9 @@ namespace data_structures
 	using ContinuousContainerIterator = ContinuousContainer::ContinuousContainerIterator;
 	using ConstContinuousContainerIterator = ContinuousContainer::ConstContinuousContainerIterator;
 
-	ContinuousContainerIterator::ContinuousContainerIterator(uint8_t* buffer) :
-		buffer(buffer)
+	ContinuousContainerIterator::ContinuousContainerIterator(uint8_t* buffer, size_t index) :
+		buffer(buffer),
+		index(index)
 	{
 
 	}
@@ -38,6 +39,7 @@ namespace data_structures
 		Block& block = *reinterpret_cast<Block*>(buffer);
 
 		buffer += block.size + sizeof(size_t);
+		index++;
 
 		return *this;
 	}
@@ -51,8 +53,9 @@ namespace data_structures
 		return it;
 	}
 
-	ConstContinuousContainerIterator::ConstContinuousContainerIterator(const uint8_t* buffer) :
-		buffer(buffer)
+	ConstContinuousContainerIterator::ConstContinuousContainerIterator(const uint8_t* buffer, size_t index) :
+		buffer(buffer),
+		index(index)
 	{
 
 	}
@@ -82,6 +85,7 @@ namespace data_structures
 		const Block& block = *reinterpret_cast<const Block*>(buffer);
 
 		buffer += block.size + sizeof(size_t);
+		index++;
 
 		return *this;
 	}
@@ -116,6 +120,16 @@ namespace data_structures
 		buffer.erase(buffer.begin() + distance, buffer.begin() + distance + objectSize);
 
 		meta.erase(meta.begin() + index);
+	}
+
+	void ContinuousContainer::remove(const ContinuousContainerIterator& iterator)
+	{
+		this->remove(iterator.index);
+	}
+
+	void ContinuousContainer::remove(const ConstContinuousContainerIterator& iterator)
+	{
+		this->remove(iterator.index);
 	}
 
 	size_t ContinuousContainer::size() const
@@ -155,7 +169,7 @@ namespace data_structures
 			return ContinuousContainerIterator();
 		}
 
-		return ContinuousContainerIterator(buffer.data() + buffer.size());
+		return ContinuousContainerIterator(buffer.data() + buffer.size(), meta.size());
 	}
 
 	ConstContinuousContainerIterator ContinuousContainer::begin() const
@@ -175,6 +189,6 @@ namespace data_structures
 			return ConstContinuousContainerIterator();
 		}
 
-		return ConstContinuousContainerIterator(buffer.data() + buffer.size());
+		return ConstContinuousContainerIterator(buffer.data() + buffer.size(), meta.size());
 	}
 }

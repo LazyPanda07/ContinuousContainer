@@ -49,11 +49,11 @@ jobs:
       run: echo "GOOGLE_TEST_CONFIGURATION=$(if ("${{ matrix.configuration }}".Contains("Release")) { echo "Release" } else { echo "Debug" })" >> $Env:GITHUB_ENV
 
     - name: Build GoogleTest
+      working-directory: ${{ github.workspace }}/Tests
       run: |
-          cd tests && `
-          git clone https://github.com/google/googletest.git -b v1.14.x && cd googletest && mkdir build && cd build && `
-          cmake -Dgtest_force_shared_crt=ON -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/tests/gtest .. && `
-          msbuild /p:Configuration=${{ env.GOOGLE_TEST_CONFIGURATION }} /p:Platform=x64 INSTALL.vcxproj
+          git clone https://github.com/google/googletest.git -b v1.14.x
+          cd googletest && mkdir build && cd build && cmake -Dgtest_force_shared_crt=ON -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/tests/gtest ..
+          cd googletest\build && msbuild /p:Configuration=${{ env.GOOGLE_TEST_CONFIGURATION }} /p:Platform=x64 INSTALL.vcxproj
           
     - name: Tests
       working-directory: ${{ github.workspace }}/Tests

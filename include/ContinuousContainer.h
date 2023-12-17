@@ -3,6 +3,7 @@
 #include <vector>
 #include <functional>
 #include <string_view>
+#include <future>
 
 namespace data_structures
 {
@@ -44,6 +45,7 @@ namespace data_structures
 		};
 
 	private:
+		// TODO: custom allocators support
 		std::vector<uint8_t> buffer;
 		std::vector<MetaInformation> meta;
 
@@ -55,9 +57,10 @@ namespace data_structures
 		{
 		private:
 			uint8_t* buffer;
+			size_t index;
 
 		public:
-			ContinuousContainerIterator(uint8_t* buffer = nullptr);
+			ContinuousContainerIterator(uint8_t* buffer = nullptr, size_t index = 0);
 
 			/**
 			 * @brief Get value
@@ -88,6 +91,8 @@ namespace data_structures
 			ContinuousContainerIterator operator++(int);
 
 			~ContinuousContainerIterator() = default;
+
+			friend class ContinuousContainer;
 		};
 
 		/**
@@ -97,9 +102,10 @@ namespace data_structures
 		{
 		private:
 			const uint8_t* buffer;
+			size_t index;
 
 		public:
-			ConstContinuousContainerIterator(const uint8_t* buffer = nullptr);
+			ConstContinuousContainerIterator(const uint8_t* buffer = nullptr, size_t index = 0);
 
 			/**
 			 * @brief Get value
@@ -122,6 +128,8 @@ namespace data_structures
 			ConstContinuousContainerIterator operator++(int);
 
 			~ConstContinuousContainerIterator() = default;
+
+			friend class ContinuousContainer;
 		};
 
 	public:
@@ -149,11 +157,46 @@ namespace data_structures
 		template<typename T, typename... Args>
 		T& add(Args&&... args);
 
+		// TODO: add information about remove complexity
+
 		/**
 		 * @brief Delete object at index
 		 * @param index 
 		*/
 		void remove(size_t index);
+
+		/**
+		 * @brief Delete object with iterator
+		 * @param iterator 
+		*/
+		void remove(const ContinuousContainerIterator& iterator);
+
+		/**
+		 * @brief Delete object with iterator
+		 * @param iterator 
+		*/
+		void remove(const ConstContinuousContainerIterator& iterator);
+
+		template<typename T, typename... Args>
+		T& insert(size_t index, Args&&... args);
+
+		template<typename T, typename... Args>
+		T& insert(const ContinuousContainerIterator& iterator, Args&&... args);
+
+		template<typename T, typename... Args>
+		T& insert(const ConstContinuousContainerIterator& iterator, Args&&... args);
+
+		template<typename T>
+		T& front();
+
+		template<typename T>
+		const T& front() const;
+
+		template<typename T>
+		T& back();
+
+		template<typename T>
+		const T& back() const;
 
 		/**
 		 * @brief Call class member function for each object
@@ -198,6 +241,8 @@ namespace data_structures
 		*/
 		template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
 		std::vector<ReturnT> call(Args&&... args) const;
+
+		// TODO: callIf
 
 		/**
 		 * @brief Returns amount of objects in container

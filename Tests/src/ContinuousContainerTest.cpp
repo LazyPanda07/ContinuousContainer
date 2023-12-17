@@ -47,8 +47,10 @@ TEST(ContinuousContainer, Getters)
     container.add<AnotherDerived>(0.15, 0.85);
 
     ASSERT_TRUE(container.getValue<BaseClass>(0).getValue() == 5);
+    ASSERT_TRUE(container.front<BaseClass>().getValue() == 5);
     ASSERT_TRUE(container.getValue<Derived>(1).getValue() == 123);
     ASSERT_TRUE(container.getValue<AnotherDerived>(2).getValue() == 1);
+    ASSERT_TRUE(container.back<AnotherDerived>().getValue() == 1);
 }
 
 TEST(ContinuousContainer, LargeContainer)
@@ -106,6 +108,8 @@ TEST(ContinuousContainer, Iterators)
     data_structures::ContinuousContainer container;
     std::mt19937 random;
 
+    ASSERT_TRUE(container.begin() == container.end());
+
     for (size_t i = 0; i < 100; i++)
     {
         switch (random() % 3)
@@ -159,6 +163,40 @@ TEST(ContinuousContainer, Iterators)
 
         ASSERT_TRUE(value == 5 || value == 100 || value == 2);
     }
+}
+
+TEST(ContinuousContainer, Insert)
+{
+    data_structures::ContinuousContainer container;
+
+    container.add<BaseClass>();
+    container.add<Derived>("123");
+    container.add<AnotherDerived>(0.15, 0.85);
+
+    container.insert<Derived>(1, "456");
+    container.insert<BaseClass>(2);
+    container.insert<AnotherDerived>(3, 1.5, 3.25);
+
+    ASSERT_TRUE(container.getValue<BaseClass>(1).getValue() == 456);
+    ASSERT_TRUE(container.getValue<BaseClass>(2).getValue() == 5);
+    ASSERT_TRUE(container.getValue<BaseClass>(3).getValue() == 4);
+
+    ASSERT_TRUE(container.getValue<BaseClass>(0).getValue() == 5);
+    ASSERT_TRUE(container.getValue<BaseClass>(4).getValue() == 123);
+    ASSERT_TRUE(container.getValue<BaseClass>(5).getValue() == 1);
+
+    container.insert<AnotherDerived>(0, 5.5, 6.5);
+    container.insert<BaseClass>(container.size() - 1);
+
+    ASSERT_TRUE(container.back<BaseClass>().getValue() == 5);
+    ASSERT_TRUE(container.front<BaseClass>().getValue() == 12);
+}
+
+TEST(ContinuousContainer, Speed)
+{
+    // TODO: speed test
+
+
 }
 
 TEST(ContinuousContainer, Destructor)

@@ -64,7 +64,7 @@ namespace data_structures
 			[](void* ptr) { std::destroy_at<T>(reinterpret_cast<T*>(ptr)); }
 		);
 
-		buffer.resize(buffer.size() + objectSize + sizeof(size_t));
+		buffer.resize(buffer.size() + sizeof(size_t) + objectSize);
 
 		uint8_t* data = buffer.data() + start + sizeof(size_t);
 
@@ -72,6 +72,93 @@ namespace data_structures
 
 		return *(new (data) T(std::forward<Args>(args)...));
 	}
+
+	template<typename T, typename... Args>
+	T& ContinuousContainer::insert(size_t index, Args&&... args)
+	{
+		std::vector<uint8_t> temp;
+		size_t objectSize = sizeof(T);
+		size_t distance = meta[index].distance;
+		std::future<void> updateMeta;
+		T* result = nullptr;
+
+		temp.reserve(buffer.size() + sizeof(size_t) + objectSize);
+
+		for (size_t i = 0; i < buffer.size(); i++)
+		{
+			if (i == distance)
+			{
+				MetaInformation information
+				(
+					distance + sizeof(size_t) + objectSize,
+					objectSize,
+					[](void* ptr) { std::destroy_at<T>(reinterpret_cast<T*>(ptr)); }
+				);
+
+				meta.insert(meta.begin() + index, std::move(information));
+
+				uint8_t* data = temp.data() + distance + sizeof(size_t);
+
+				memcpy(data - sizeof(size_t), &objectSize, sizeof(objectSize));
+
+				result = (new (data) T(std::forward<Args>(args)...));
+
+				updateMeta = std::async(std::launch::async, [this, index, objectSize]()
+					{
+						for (size_t i = index + 1; i < meta.size(); i++)
+						{
+							meta[i].distance += objectSize + sizeof(size_t);
+						}
+					});
+			}
+
+			temp.push_back(buffer[i]);
+		}
+
+		buffer = std::move(temp);
+
+		updateMeta.wait();
+
+		return *result;
+	}
+
+	template<typename T, typename... Args>
+	T& ContinuousContainer::insert(const ContinuousContainerIterator& iterator, Args&&... args)
+	{
+		return this->insert<T, Args...>(iterator.index, args...);
+	}
+
+	template<typename T, typename... Args>
+	T& ContinuousContainer::insert(const ConstContinuousContainerIterator& iterator, Args&&... args)
+	{
+		return this->insert<T, Args...>(iterator.index, args...);
+	}
+
+	template<typename T>
+	T& ContinuousContainer::front()
+	{
+		return *reinterpret_cast<T*>(buffer.data() + sizeof(size_t));
+	}
+
+	template<typename T>
+	const T& ContinuousContainer::front() const
+	{
+		return *reinterpret_cast<const T*>(buffer.data() + sizeof(size_t));
+	}
+
+	template<typename T>
+	T& ContinuousContainer::back()
+	{
+		return *reinterpret_cast<T*>(buffer.data() + meta.back().distance + sizeof(size_t));
+	}
+
+	template<typename T>
+	const T& ContinuousContainer::back() const
+	{
+		return *reinterpret_cast<const T*>(buffer.data() + meta.back().distance + sizeof(size_t));
+	}
+
+	// TODO: refactor
 
 	template<typename ClassT, auto FunctionT, typename... Args>
 	void ContinuousContainer::call(Args&&... args)
