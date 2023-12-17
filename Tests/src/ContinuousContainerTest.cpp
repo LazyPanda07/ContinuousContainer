@@ -188,8 +188,8 @@ TEST(ContinuousContainer, Insert)
     container.insert<AnotherDerived>(0, 5.5, 6.5);
     container.insert<BaseClass>(container.size() - 1);
 
-    ASSERT_TRUE(container.back<BaseClass>().getValue() == 5);
-    ASSERT_TRUE(container.front<BaseClass>().getValue() == 12);
+    ASSERT_TRUE(container.front<BaseClass>().getValue() == 5);
+    ASSERT_TRUE(container.back<BaseClass>().getValue() == 12);
 }
 
 TEST(ContinuousContainer, Speed)
