@@ -51,7 +51,7 @@ Timer::~Timer()
 {
 	std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
 
-	double result = (end - start).count();
+	double result = static_cast<double>((end - start).count());
 
 	result /= std::chrono::high_resolution_clock::period::den;
 

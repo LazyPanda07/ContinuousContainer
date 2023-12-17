@@ -76,7 +76,7 @@ namespace data_structures
 	template<typename T, typename... Args>
 	T& ContinuousContainer::push_back(Args&&... args)
 	{
-		return this->add<Args...>(args...);
+		return this->add<T>(std::forward<Args>(args)...);
 	}
 
 	template<typename T, typename... Args>

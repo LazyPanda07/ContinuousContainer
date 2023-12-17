@@ -246,7 +246,7 @@ TEST(ContinuousContainer, Speed)
         {
             container.push_back(std::make_unique<BaseClass>());
             container.push_back(std::make_unique<Derived>(std::to_string(i)));
-            container.push_back(std::make_unique<AnotherDerived>(i, i * 2));
+            container.push_back(std::make_unique<AnotherDerived>(static_cast<double>(i), static_cast<double>(i * 2)));
         }
 
         Timer timer(first);
@@ -269,7 +269,7 @@ TEST(ContinuousContainer, Speed)
         {
             container.push_back<BaseClass>();
             container.push_back<Derived>(std::to_string(i));
-            container.push_back<AnotherDerived>(i, i * 2);
+            container.push_back<AnotherDerived>(static_cast<double>(i), static_cast<double>(i * 2));
         }
 
         Timer timer(second);
