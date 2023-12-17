@@ -192,6 +192,32 @@ TEST(ContinuousContainer, Insert)
     ASSERT_TRUE(container.getValue<BaseClass>(container.size() - 2).getValue() == 5);
 }
 
+TEST(ContinuousContainer, Call)
+{
+    data_structures::ContinuousContainer container;
+
+    container.add<BaseClass>();
+    container.add<Derived>("123");
+    container.add<AnotherDerived>(0.15, 0.85);
+
+    std::vector<int> result = container.call<BaseClass, &BaseClass::getValue, int>();
+
+    ASSERT_TRUE(result.size() == 3);
+}
+
+TEST(ContinuousContainer, CallIf)
+{
+    data_structures::ContinuousContainer container;
+
+    container.add<BaseClass>();
+    container.add<Derived>("123");
+    container.add<AnotherDerived>(0.15, 0.85);
+
+    std::vector<int> result = container.callIf<BaseClass, &BaseClass::getValue, int>([](const BaseClass& object) { return object.getValue() > 5; });
+
+    ASSERT_TRUE(result.size() == 1);
+}
+
 TEST(ContinuousContainer, Speed)
 {
     // TODO: speed test

@@ -242,7 +242,50 @@ namespace data_structures
 		template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
 		std::vector<ReturnT> call(Args&&... args) const;
 
-		// TODO: callIf
+		/**
+		 * @brief Call class member function for each object if predicate returns true
+		 * @tparam ClassT 
+		 * @tparam ...Args 
+		 * @tparam FunctionT 
+		 * @param predicate 
+		 * @param ...args 
+		*/
+		template<typename ClassT, auto FunctionT, typename... Args>
+		void callIf(const std::function<bool(const ClassT&)>& predicate, Args&&... args);
+
+		/**
+		 * @brief Call class member function for each object with return value if predicate returns true
+		 * @tparam ClassT
+		 * @tparam ReturnT
+		 * @tparam ...Args
+		 * @tparam FunctionT
+		 * @param ...args
+		 * @return
+		*/
+		template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
+		std::vector<ReturnT> callIf(const std::function<bool(const ClassT&)>& predicate, Args&&... args);
+
+		/**
+		 * @brief Call class member function for each object if predicate returns true
+		 * @tparam ClassT
+		 * @tparam ...Args
+		 * @tparam FunctionT
+		 * @param ...args
+		*/
+		template<typename ClassT, auto FunctionT, typename... Args>
+		void callIf(const std::function<bool(const ClassT&)>& predicate, Args&&... args) const;
+
+		/**
+		 * @brief Call class member function for each object with return value if predicate returns true
+		 * @tparam ClassT
+		 * @tparam ReturnT
+		 * @tparam ...Args
+		 * @tparam FunctionT
+		 * @param ...args
+		 * @return
+		*/
+		template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
+		std::vector<ReturnT> callIf(const std::function<bool(const ClassT&)>& predicate, Args&&... args) const;
 
 		/**
 		 * @brief Returns amount of objects in container

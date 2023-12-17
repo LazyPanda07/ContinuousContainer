@@ -221,6 +221,74 @@ namespace data_structures
 		return result;
 	}
 
+	template<typename ClassT, auto FunctionT, typename... Args>
+	void ContinuousContainer::callIf(const std::function<bool(const ClassT&)>& predicate, Args&&... args)
+	{
+		for (const auto& [distance, objectSize, destructor] : meta)
+		{
+			Block& block = *reinterpret_cast<Block*>(buffer.data() + distance);
+
+			if (predicate(*reinterpret_cast<const ClassT*>(&block.data)))
+			{
+				block.call<ClassT, FunctionT>(std::forward<Args>(args)...);
+			}
+		}
+	}
+
+	template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
+	std::vector<ReturnT> ContinuousContainer::callIf(const std::function<bool(const ClassT&)>& predicate, Args&&... args)
+	{
+		std::vector<ReturnT> result;
+
+		result.reserve(buffer.size());
+
+		for (const auto& [distance, objectSize, destructor] : meta)
+		{
+			Block& block = *reinterpret_cast<Block*>(buffer.data() + distance);
+
+			if (predicate(*reinterpret_cast<const ClassT*>(&block.data)))
+			{
+				result.push_back(block.call<ClassT, FunctionT, ReturnT>(std::forward<Args>(args)...));
+			}
+		}
+
+		return result;
+	}
+
+	template<typename ClassT, auto FunctionT, typename... Args>
+	void ContinuousContainer::callIf(const std::function<bool(const ClassT&)>& predicate, Args&&... args) const
+	{
+		for (const auto& [distance, objectSize, destructor] : meta)
+		{
+			const Block& block = *reinterpret_cast<const Block*>(buffer.data() + distance);
+
+			if (predicate(*reinterpret_cast<const ClassT*>(&block.data)))
+			{
+				block.call<ClassT, FunctionT>(std::forward<Args>(args)...);
+			}
+		}
+	}
+
+	template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
+	std::vector<ReturnT> ContinuousContainer::callIf(const std::function<bool(const ClassT&)>& predicate, Args&&... args) const
+	{
+		std::vector<ReturnT> result;
+
+		result.reserve(buffer.size());
+
+		for (const auto& [distance, objectSize, destructor] : meta)
+		{
+			const Block& block = *reinterpret_cast<const Block*>(buffer.data() + distance);
+
+			if (predicate(*reinterpret_cast<const ClassT*>(&block.data)))
+			{
+				result.push_back(block.call<ClassT, FunctionT, ReturnT>(std::forward<Args>(args)...));
+			}
+		}
+
+		return result;
+	}
+
 	template<typename T>
 	inline const T& ContinuousContainer::getValue(size_t index) const
 	{
