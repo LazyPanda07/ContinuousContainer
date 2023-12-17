@@ -84,6 +84,8 @@ jobs:
       
     - name: Create zip
       if: ${{ env.CURRENT_BRANCH == 'master' }}
+      working-directory: ${{ github.workspace }}
+      shell: pwsh
       run: Compress-Archive -Path @("Debug", "Release", "include") -DestinationPath ${{ env.CONTINUOUS_CONTAINER_ARCHIVE_NAME }}
 
     - name: Publish
