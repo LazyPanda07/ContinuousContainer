@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <random>
-#include <chrono>
 
 #include "ContinuousContainer.h"
 #include "Classes.h"
@@ -245,8 +244,6 @@ TEST(ContinuousContainer, Speed)
 	size_t result = 0;
 	size_t runs = 10'000;
 
-	using namespace std::chrono_literals;
-
 	{
 		std::vector<std::unique_ptr<BaseClass>> container;
 
@@ -258,8 +255,6 @@ TEST(ContinuousContainer, Speed)
 		}
 
 		{
-			std::this_thread::sleep_for(10s);
-
 			Timer timer(first);
 
 			for (size_t i = 0; i < runs; i++)
@@ -285,8 +280,6 @@ TEST(ContinuousContainer, Speed)
 		}
 
 		{
-			std::this_thread::sleep_for(10s);
-
 			Timer timer(second);
 
 			for (size_t i = 0; i < runs; i++)
