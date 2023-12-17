@@ -259,9 +259,9 @@ TEST(ContinuousContainer, Speed)
 
 			for (size_t i = 0; i < runs; i++)
 			{
-				for (const auto& value : container)
+				for (size_t j = 0; j < container.size(); j++)
 				{
-					result += value->get();
+					result += container[j]->get();
 				}
 			}
 		}
@@ -284,15 +284,15 @@ TEST(ContinuousContainer, Speed)
 
 			for (size_t i = 0; i < runs; i++)
 			{
-				for (const auto& value : container)
+				for (size_t j = 0; j < container.size(); j++)
 				{
-					result += value.as<BaseClass>().get();
+					result += container.get<BaseClass>(j).get();
 				}
 			}
 		}
 	}
 
-	std::cout << "Pointers: " << first << "\tContinuousContainer:" << second << std::endl;
+	std::cout << "Pointers: " << first << " seconds" << std::endl << "ContinuousContainer: " << second << " seconds" << std::endl;
 
 	ASSERT_TRUE(first > second);
 }
