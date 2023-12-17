@@ -39,3 +39,21 @@ Accumulated::~Accumulated()
 {
 	out += value;
 }
+
+Timer::Timer(double& out) :
+	out(out),
+	start(std::chrono::high_resolution_clock::now())
+{
+
+}
+
+Timer::~Timer()
+{
+	std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+
+	double result = (end - start).count();
+
+	result /= std::chrono::high_resolution_clock::period::den;
+
+	out += result;
+}

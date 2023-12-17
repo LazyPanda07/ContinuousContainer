@@ -235,9 +235,55 @@ TEST(ContinuousContainer, CallIf)
 
 TEST(ContinuousContainer, Speed)
 {
-    // TODO: speed test
+    double first = 0.0;
+    double second = 0.0;
+    size_t result = 0;
 
+    {
+        std::vector<std::unique_ptr<BaseClass>> container;
 
+        for (size_t i = 0; i < 100'000; i++)
+        {
+            container.push_back(std::make_unique<BaseClass>());
+            container.push_back(std::make_unique<Derived>(std::to_string(i)));
+            container.push_back(std::make_unique<AnotherDerived>(i, i * 2));
+        }
+
+        Timer timer(first);
+
+        for (size_t i = 0; i < 10'000; i++)
+        {
+            for (const auto& value : container)
+            {
+                result += value->get();
+            }
+        }
+    }
+
+    result = 0;
+
+    {
+        data_structures::ContinuousContainer container;
+
+        for (size_t i = 0; i < 100'000; i++)
+        {
+            container.push_back<BaseClass>();
+            container.push_back<Derived>(std::to_string(i));
+            container.push_back<AnotherDerived>(i, i * 2);
+        }
+
+        Timer timer(second);
+
+        for (size_t i = 0; i < 10'000; i++)
+        {
+            for (const auto& value : container)
+            {
+                result += value.as<BaseClass>().get();
+            }
+        }
+    }
+    
+    ASSERT_TRUE(first > second);
 }
 
 TEST(ContinuousContainer, Destructor)

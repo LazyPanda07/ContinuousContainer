@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <chrono>
 
 class BaseClass
 {
@@ -49,4 +50,16 @@ public:
 	Accumulated(int& out, int value);
 
 	~Accumulated();
+};
+
+class Timer
+{
+private:
+	double& out;
+	std::chrono::high_resolution_clock::time_point start;
+
+public:
+	Timer(double& out);
+
+	~Timer();
 };
