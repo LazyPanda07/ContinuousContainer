@@ -157,7 +157,15 @@ namespace data_structures
 		template<typename T, typename... Args>
 		T& add(Args&&... args);
 
-		// TODO: add information about remove complexity
+		/**
+		 * @brief Create object
+		 * @tparam T 
+		 * @tparam ...Args 
+		 * @param ...args 
+		 * @return 
+		*/
+		template<typename T, typename... Args>
+		T& push_back(Args&&... args);
 
 		/**
 		 * @brief Delete object at index
@@ -177,48 +185,70 @@ namespace data_structures
 		*/
 		void remove(const ConstContinuousContainerIterator& iterator);
 
-		template<typename T, typename... Args>
-		T& insert(size_t index, Args&&... args);
-
-		template<typename T, typename... Args>
-		T& insert(const ContinuousContainerIterator& iterator, Args&&... args);
-
-		template<typename T, typename... Args>
-		T& insert(const ConstContinuousContainerIterator& iterator, Args&&... args);
-
-		template<typename T>
-		T& front();
-
-		template<typename T>
-		const T& front() const;
-
-		template<typename T>
-		T& back();
-
-		template<typename T>
-		const T& back() const;
-
 		/**
-		 * @brief Call class member function for each object
+		 * @brief Create and insert object at index
+		 * @tparam T 
 		 * @tparam ...Args 
-		 * @tparam ClassT 
-		 * @tparam FunctionT 
-		 * @param ...args 
-		*/
-		template<typename ClassT, auto FunctionT, typename... Args>
-		void call(Args&&... args);
-
-		/**
-		 * @brief Call class member function for each object with return value
-		 * @tparam ClassT 
-		 * @tparam ReturnT 
-		 * @tparam ...Args 
-		 * @tparam FunctionT 
+		 * @param index 
 		 * @param ...args 
 		 * @return 
 		*/
-		template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
-		std::vector<ReturnT> call(Args&&... args);
+		template<typename T, typename... Args>
+		T& insert(size_t index, Args&&... args);
+
+		/**
+		 * @brief Create and insert object with iterator
+		 * @tparam T 
+		 * @tparam ...Args 
+		 * @param iterator 
+		 * @param ...args 
+		 * @return 
+		*/
+		template<typename T, typename... Args>
+		T& insert(const ContinuousContainerIterator& iterator, Args&&... args);
+
+		/**
+		 * @brief Create and insert object with iterator
+		 * @tparam T 
+		 * @tparam ...Args 
+		 * @param iterator 
+		 * @param ...args 
+		 * @return 
+		*/
+		template<typename T, typename... Args>
+		T& insert(const ConstContinuousContainerIterator& iterator, Args&&... args);
+
+		/**
+		 * @brief Get first element
+		 * @tparam T 
+		 * @return 
+		*/
+		template<typename T>
+		T& front();
+
+		/**
+		 * @brief Get first element
+		 * @tparam T 
+		 * @return 
+		*/
+		template<typename T>
+		const T& front() const;
+
+		/**
+		 * @brief Get last element
+		 * @tparam T 
+		 * @return 
+		*/
+		template<typename T>
+		T& back();
+
+		/**
+		 * @brief Get last element
+		 * @tparam T 
+		 * @return 
+		*/
+		template<typename T>
+		const T& back() const;
 
 		/**
 		 * @brief Call class member function for each object
@@ -244,29 +274,6 @@ namespace data_structures
 
 		/**
 		 * @brief Call class member function for each object if predicate returns true
-		 * @tparam ClassT 
-		 * @tparam ...Args 
-		 * @tparam FunctionT 
-		 * @param predicate 
-		 * @param ...args 
-		*/
-		template<typename ClassT, auto FunctionT, typename... Args>
-		void callIf(const std::function<bool(const ClassT&)>& predicate, Args&&... args);
-
-		/**
-		 * @brief Call class member function for each object with return value if predicate returns true
-		 * @tparam ClassT
-		 * @tparam ReturnT
-		 * @tparam ...Args
-		 * @tparam FunctionT
-		 * @param ...args
-		 * @return
-		*/
-		template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
-		std::vector<ReturnT> callIf(const std::function<bool(const ClassT&)>& predicate, Args&&... args);
-
-		/**
-		 * @brief Call class member function for each object if predicate returns true
 		 * @tparam ClassT
 		 * @tparam ...Args
 		 * @tparam FunctionT
@@ -288,6 +295,15 @@ namespace data_structures
 		std::vector<ReturnT> callIf(const std::function<bool(const ClassT&)>& predicate, Args&&... args) const;
 
 		/**
+		 * @brief Find element by predicate
+		 * @tparam T 
+		 * @param predicate 
+		 * @return 
+		*/
+		template<typename T>
+		T* find(const std::function<bool(const T&)>& predicate) const;
+
+		/**
 		 * @brief Returns amount of objects in container
 		 * @return 
 		*/
@@ -300,13 +316,33 @@ namespace data_structures
 		size_t sizeInBytes() const;
 
 		/**
-		 * @brief Get object from container
+		 * @brief Get object from container with index check
 		 * @tparam T 
 		 * @param index 
 		 * @return 
+		 * @exception std::out_of_range
 		*/
 		template<typename T>
-		const T& getValue(size_t index) const;
+		T& at(size_t index);
+
+		/**
+		 * @brief Get object from container with index check
+		 * @tparam T
+		 * @param index
+		 * @return
+		 * @exception std::out_of_range
+		*/
+		template<typename T>
+		const T& at(size_t index) const;
+
+		/**
+		 * @brief Get object from container
+		 * @tparam T
+		 * @param index
+		 * @return
+		*/
+		template<typename T>
+		T& get(size_t index);
 
 		/**
 		 * @brief Get object from container
@@ -315,7 +351,7 @@ namespace data_structures
 		 * @return 
 		*/
 		template<typename T>
-		T& getValue(size_t index);
+		const T& get(size_t index) const;
 
 		ContinuousContainerIterator begin();
 

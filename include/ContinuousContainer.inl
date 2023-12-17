@@ -74,6 +74,12 @@ namespace data_structures
 	}
 
 	template<typename T, typename... Args>
+	T& ContinuousContainer::push_back(Args&&... args)
+	{
+		return this->add<Args...>(args...);
+	}
+
+	template<typename T, typename... Args>
 	T& ContinuousContainer::insert(size_t index, Args&&... args)
 	{
 		std::vector<uint8_t> temp;
@@ -140,57 +146,27 @@ namespace data_structures
 	}
 
 	template<typename T>
-	T& ContinuousContainer::front()
+	inline T& ContinuousContainer::front()
 	{
 		return *reinterpret_cast<T*>(buffer.data() + sizeof(size_t));
 	}
 
 	template<typename T>
-	const T& ContinuousContainer::front() const
+	inline const T& ContinuousContainer::front() const
 	{
 		return *reinterpret_cast<const T*>(buffer.data() + sizeof(size_t));
 	}
 
 	template<typename T>
-	T& ContinuousContainer::back()
+	inline T& ContinuousContainer::back()
 	{
 		return *reinterpret_cast<T*>(buffer.data() + meta.back().distance + sizeof(size_t));
 	}
 
 	template<typename T>
-	const T& ContinuousContainer::back() const
+	inline const T& ContinuousContainer::back() const
 	{
 		return *reinterpret_cast<const T*>(buffer.data() + meta.back().distance + sizeof(size_t));
-	}
-
-	// TODO: refactor
-
-	template<typename ClassT, auto FunctionT, typename... Args>
-	void ContinuousContainer::call(Args&&... args)
-	{
-		for (const auto& [distance, objectSize, destructor] : meta)
-		{
-			Block& block = *reinterpret_cast<Block*>(buffer.data() + distance);
-
-			block.call<ClassT, FunctionT>(std::forward<Args>(args)...);
-		}
-	}
-
-	template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
-	std::vector<ReturnT> ContinuousContainer::call(Args&&... args)
-	{
-		std::vector<ReturnT> result;
-
-		result.reserve(buffer.size());
-
-		for (const auto& [distance, objectSize, destructor] : meta)
-		{
-			Block& block = *reinterpret_cast<Block*>(buffer.data() + distance);
-
-			result.push_back(block.call<ClassT, FunctionT, ReturnT>(std::forward<Args>(args)...));
-		}
-
-		return result;
 	}
 
 	template<typename ClassT, auto FunctionT, typename... Args>
@@ -216,40 +192,6 @@ namespace data_structures
 			const Block& block = *reinterpret_cast<const Block*>(buffer.data() + distance);
 
 			result.push_back(block.call<ClassT, FunctionT, ReturnT>(std::forward<Args>(args)...));
-		}
-
-		return result;
-	}
-
-	template<typename ClassT, auto FunctionT, typename... Args>
-	void ContinuousContainer::callIf(const std::function<bool(const ClassT&)>& predicate, Args&&... args)
-	{
-		for (const auto& [distance, objectSize, destructor] : meta)
-		{
-			Block& block = *reinterpret_cast<Block*>(buffer.data() + distance);
-
-			if (predicate(*reinterpret_cast<const ClassT*>(&block.data)))
-			{
-				block.call<ClassT, FunctionT>(std::forward<Args>(args)...);
-			}
-		}
-	}
-
-	template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
-	std::vector<ReturnT> ContinuousContainer::callIf(const std::function<bool(const ClassT&)>& predicate, Args&&... args)
-	{
-		std::vector<ReturnT> result;
-
-		result.reserve(buffer.size());
-
-		for (const auto& [distance, objectSize, destructor] : meta)
-		{
-			Block& block = *reinterpret_cast<Block*>(buffer.data() + distance);
-
-			if (predicate(*reinterpret_cast<const ClassT*>(&block.data)))
-			{
-				result.push_back(block.call<ClassT, FunctionT, ReturnT>(std::forward<Args>(args)...));
-			}
 		}
 
 		return result;
@@ -290,7 +232,46 @@ namespace data_structures
 	}
 
 	template<typename T>
-	inline const T& ContinuousContainer::getValue(size_t index) const
+	T* ContinuousContainer::find(const std::function<bool(const T&)>& predicate) const
+	{
+		for (const auto& [distance, objectSize, destructor] : meta)
+		{
+			const Block& block = *reinterpret_cast<Block*>(buffer.data() + distance);
+			const T& element = *reinterpret_cast<const T*>(&block.data);
+
+			if (predicate(element))
+			{
+				return element;
+			}
+		}
+
+		return nullptr;
+	}
+
+	template<typename T>
+	inline T& ContinuousContainer::at(size_t index)
+	{
+		if (index >= meta.size())
+		{
+			throw std::out_of_range("Out of range");
+		}
+
+		return this->get<T>(index);
+	}
+
+	template<typename T>
+	inline const T& ContinuousContainer::at(size_t index) const
+	{
+		if (index >= meta.size())
+		{
+			throw std::out_of_range("Out of range");
+		}
+
+		return this->get<T>(index);
+	}
+
+	template<typename T>
+	inline const T& ContinuousContainer::get(size_t index) const
 	{
 		const Block& block = *reinterpret_cast<const Block*>(buffer.data() + meta[index].distance);
 
@@ -298,7 +279,7 @@ namespace data_structures
 	}
 
 	template<typename T>
-	inline T& ContinuousContainer::getValue(size_t index)
+	inline T& ContinuousContainer::get(size_t index)
 	{
 		Block& block = *reinterpret_cast<Block*>(buffer.data() + meta[index].distance);
 

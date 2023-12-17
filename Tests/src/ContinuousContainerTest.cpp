@@ -12,8 +12,23 @@ TEST(ContinuousContainer, ConstructorInitializerList)
 
     for (size_t i = 0; i < container.size(); i++)
     {
-        ASSERT_TRUE(container.getValue<int>(i) == i);
+        ASSERT_TRUE(container.get<int>(i) == i);
     }
+}
+
+TEST(ContinuousContainer, Add)
+{
+    data_structures::ContinuousContainer container;
+    size_t count = 10;
+
+    for (size_t i = 0; i < count; i++)
+    {
+        container.add<size_t>(i);
+
+        container.push_back<size_t>(i);
+    }
+
+    ASSERT_TRUE(container.size() == count * 2);
 }
 
 TEST(ContinuousContainer, Size)
@@ -46,11 +61,11 @@ TEST(ContinuousContainer, Getters)
     container.add<Derived>("123");
     container.add<AnotherDerived>(0.15, 0.85);
 
-    ASSERT_TRUE(container.getValue<BaseClass>(0).getValue() == 5);
-    ASSERT_TRUE(container.front<BaseClass>().getValue() == 5);
-    ASSERT_TRUE(container.getValue<Derived>(1).getValue() == 123);
-    ASSERT_TRUE(container.getValue<AnotherDerived>(2).getValue() == 1);
-    ASSERT_TRUE(container.back<AnotherDerived>().getValue() == 1);
+    ASSERT_TRUE(container.get<BaseClass>(0).get() == 5);
+    ASSERT_TRUE(container.front<BaseClass>().get() == 5);
+    ASSERT_TRUE(container.get<Derived>(1).get() == 123);
+    ASSERT_TRUE(container.get<AnotherDerived>(2).get() == 1);
+    ASSERT_TRUE(container.back<AnotherDerived>().get() == 1);
 }
 
 TEST(ContinuousContainer, LargeContainer)
@@ -60,20 +75,20 @@ TEST(ContinuousContainer, LargeContainer)
 
     for (size_t i = 0; i < 10'000; i++)
     {
-        results.push_back(container.add<BaseClass>().getValue());
+        results.push_back(container.add<BaseClass>().get());
     }
 
     for (size_t i = 0; i < 10'000; i++)
     {
-        results.push_back(container.add<Derived>("1000").getValue());
+        results.push_back(container.add<Derived>("1000").get());
     }
 
     for (size_t i = 0; i < 10'000; i++)
     {
-        results.push_back(container.add<AnotherDerived>(0.5, 0.5).getValue());
+        results.push_back(container.add<AnotherDerived>(0.5, 0.5).get());
     }
 
-    ASSERT_TRUE(std::ranges::equal(container.call<BaseClass, &BaseClass::getValue, int>(), results));
+    ASSERT_TRUE(std::ranges::equal(container.call<BaseClass, &BaseClass::get, int>(), results));
 }
 
 TEST(ContinuousContainer, Remove)
@@ -83,12 +98,12 @@ TEST(ContinuousContainer, Remove)
 
     for (size_t i = 0; i < 100; i++)
     {
-        results.push_back(container.add<BaseClass>().getValue());
+        results.push_back(container.add<BaseClass>().get());
     }
 
     for (size_t i = 0; i < 100; i++)
     {
-        results.push_back(container.add<Derived>("1000").getValue());
+        results.push_back(container.add<Derived>("1000").get());
     }
 
     for (size_t i = 0; i < 10; i++)
@@ -100,7 +115,7 @@ TEST(ContinuousContainer, Remove)
         results.erase(results.begin() + i + 100);
     }
 
-    ASSERT_TRUE(std::ranges::equal(container.call<BaseClass, &BaseClass::getValue, int>(), results));
+    ASSERT_TRUE(std::ranges::equal(container.call<BaseClass, &BaseClass::get, int>(), results));
 }
 
 TEST(ContinuousContainer, Iterators)
@@ -136,7 +151,7 @@ TEST(ContinuousContainer, Iterators)
 
     for (data_structures::ContinuousContainer::ContinuousContainerIterator it = container.begin(); it != container.end(); ++it)
     {
-        int value = it.as<BaseClass>().getValue();
+        int value = it.as<BaseClass>().get();
 
         ASSERT_TRUE(value == 5 || value == 100 || value == 2);
     }
@@ -145,21 +160,21 @@ TEST(ContinuousContainer, Iterators)
         it != const_cast<const data_structures::ContinuousContainer&>(container).end();
         ++it)
     {
-        int value = it.as<BaseClass>().getValue();
+        int value = it.as<BaseClass>().get();
 
         ASSERT_TRUE(value == 5 || value == 100 || value == 2);
     }
 
     for (const auto& it : container)
     {
-        int value = it.as<BaseClass>().getValue();
+        int value = it.as<BaseClass>().get();
 
         ASSERT_TRUE(value == 5 || value == 100 || value == 2);
     }
 
     for (auto& it : container)
     {
-        int value = it.as<BaseClass>().getValue();
+        int value = it.as<BaseClass>().get();
 
         ASSERT_TRUE(value == 5 || value == 100 || value == 2);
     }
@@ -177,19 +192,19 @@ TEST(ContinuousContainer, Insert)
     container.insert<BaseClass>(2);
     container.insert<AnotherDerived>(3, 1.5, 3.25);
 
-    ASSERT_TRUE(container.getValue<BaseClass>(1).getValue() == 456);
-    ASSERT_TRUE(container.getValue<BaseClass>(2).getValue() == 5);
-    ASSERT_TRUE(container.getValue<BaseClass>(3).getValue() == 4);
+    ASSERT_TRUE(container.get<BaseClass>(1).get() == 456);
+    ASSERT_TRUE(container.get<BaseClass>(2).get() == 5);
+    ASSERT_TRUE(container.get<BaseClass>(3).get() == 4);
 
-    ASSERT_TRUE(container.getValue<BaseClass>(0).getValue() == 5);
-    ASSERT_TRUE(container.getValue<BaseClass>(4).getValue() == 123);
-    ASSERT_TRUE(container.getValue<BaseClass>(5).getValue() == 1);
+    ASSERT_TRUE(container.get<BaseClass>(0).get() == 5);
+    ASSERT_TRUE(container.get<BaseClass>(4).get() == 123);
+    ASSERT_TRUE(container.get<BaseClass>(5).get() == 1);
 
     container.insert<AnotherDerived>(0, 5.5, 6.5);
     container.insert<BaseClass>(container.size() - 1);
 
-    ASSERT_TRUE(container.front<BaseClass>().getValue() == 12);
-    ASSERT_TRUE(container.getValue<BaseClass>(container.size() - 2).getValue() == 5);
+    ASSERT_TRUE(container.front<BaseClass>().get() == 12);
+    ASSERT_TRUE(container.get<BaseClass>(container.size() - 2).get() == 5);
 }
 
 TEST(ContinuousContainer, Call)
@@ -200,7 +215,7 @@ TEST(ContinuousContainer, Call)
     container.add<Derived>("123");
     container.add<AnotherDerived>(0.15, 0.85);
 
-    std::vector<int> result = container.call<BaseClass, &BaseClass::getValue, int>();
+    std::vector<int> result = container.call<BaseClass, &BaseClass::get, int>();
 
     ASSERT_TRUE(result.size() == 3);
 }
@@ -213,7 +228,7 @@ TEST(ContinuousContainer, CallIf)
     container.add<Derived>("123");
     container.add<AnotherDerived>(0.15, 0.85);
 
-    std::vector<int> result = container.callIf<BaseClass, &BaseClass::getValue, int>([](const BaseClass& object) { return object.getValue() > 5; });
+    std::vector<int> result = container.callIf<BaseClass, &BaseClass::get, int>([](const BaseClass& object) { return object.get() > 5; });
 
     ASSERT_TRUE(result.size() == 1);
 }

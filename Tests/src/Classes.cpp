@@ -1,6 +1,6 @@
 #include "Classes.h"
 
-int BaseClass::getValue() const
+int BaseClass::get() const
 {
 	return 5;
 }
@@ -11,7 +11,7 @@ Derived::Derived(const std::string& value) :
 
 }
 
-int Derived::getValue() const
+int Derived::get() const
 {
 	return std::stol(value);
 }
@@ -23,7 +23,7 @@ AnotherDerived::AnotherDerived(double first, double second) :
 
 }
 
-int AnotherDerived::getValue() const
+int AnotherDerived::get() const
 {
 	return static_cast<int>(first + second);
 }

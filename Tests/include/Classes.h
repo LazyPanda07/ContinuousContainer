@@ -7,7 +7,7 @@ class BaseClass
 public:
 	BaseClass() = default;
 
-	virtual int getValue() const;
+	virtual int get() const;
 
 	virtual ~BaseClass() = default;
 };
@@ -20,7 +20,7 @@ private:
 public:
 	Derived(const std::string& value);
 
-	int getValue() const override;
+	int get() const override;
 
 	~Derived() = default;
 };
@@ -34,7 +34,7 @@ private:
 public:
 	AnotherDerived(double first, double second);
 
-	int getValue() const override;
+	int get() const override;
 
 	~AnotherDerived() = default;
 };
