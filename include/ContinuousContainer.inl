@@ -90,12 +90,17 @@ namespace data_structures
 			{
 				MetaInformation information
 				(
-					distance + sizeof(size_t) + objectSize,
+					distance,
 					objectSize,
 					[](void* ptr) { std::destroy_at<T>(reinterpret_cast<T*>(ptr)); }
 				);
 
 				meta.insert(meta.begin() + index, std::move(information));
+
+				for (size_t j = 0; j < objectSize + sizeof(size_t); j++)
+				{
+					temp.emplace_back();
+				}
 
 				uint8_t* data = temp.data() + distance + sizeof(size_t);
 
