@@ -79,13 +79,14 @@ jobs:
       run: echo "CONTINUOUS_CONTAINER_ARCHIVE_NAME=ContinuousContainer{{ env.CONTINUOUS_CONTAINER_VERSION }}.zip" >> $Env:GITHUB_ENV
 
     - name: Download artifacts
-      if: ${{ env.CURRENT_BRANCH == 'master' }}
+      # if: ${{ env.CURRENT_BRANCH == 'master' }}
       uses: actions/download-artifact@v3
       
+    - name: Dir
+      run: dir
+
     - name: Create zip
-      if: ${{ env.CURRENT_BRANCH == 'master' }}
-      working-directory: ${{ github.workspace }}
-      shell: pwsh
+      # if: ${{ env.CURRENT_BRANCH == 'master' }}
       run: Compress-Archive -Path @("Debug", "Release", "include") -DestinationPath ${{ env.CONTINUOUS_CONTAINER_ARCHIVE_NAME }}
 
     - name: Publish
