@@ -172,11 +172,13 @@ namespace data_structures
 	template<typename ClassT, auto FunctionT, typename... Args>
 	void ContinuousContainer::call(Args&&... args) const
 	{
-		for (const auto& [distance, objectSize, destructor] : meta)
+		for (size_t i = 0; i < buffer.size();)
 		{
-			const Block& block = *reinterpret_cast<const Block*>(buffer.data() + distance);
+			const Block& block = *reinterpret_cast<const Block*>(buffer.data() + i);
 
 			block.call<ClassT, FunctionT>(std::forward<Args>(args)...);
+
+			i += block.size + sizeof(size_t);
 		}
 	}
 
@@ -185,13 +187,15 @@ namespace data_structures
 	{
 		std::vector<ReturnT> result;
 
-		result.reserve(buffer.size());
+		result.reserve(meta.size());
 
-		for (const auto& [distance, objectSize, destructor] : meta)
+		for (size_t i = 0; i < buffer.size();)
 		{
-			const Block& block = *reinterpret_cast<const Block*>(buffer.data() + distance);
+			const Block& block = *reinterpret_cast<const Block*>(buffer.data() + i);
 
 			result.push_back(block.call<ClassT, FunctionT, ReturnT>(std::forward<Args>(args)...));
+
+			i += block.size + sizeof(size_t);
 		}
 
 		return result;
@@ -200,14 +204,16 @@ namespace data_structures
 	template<typename ClassT, auto FunctionT, typename... Args>
 	void ContinuousContainer::callIf(const std::function<bool(const ClassT&)>& predicate, Args&&... args) const
 	{
-		for (const auto& [distance, objectSize, destructor] : meta)
+		for (size_t i = 0; i < buffer.size();)
 		{
-			const Block& block = *reinterpret_cast<const Block*>(buffer.data() + distance);
+			const Block& block = *reinterpret_cast<const Block*>(buffer.data() + i);
 
 			if (predicate(*reinterpret_cast<const ClassT*>(&block.data)))
 			{
 				block.call<ClassT, FunctionT>(std::forward<Args>(args)...);
 			}
+
+			i += block.size + sizeof(size_t);
 		}
 	}
 
@@ -216,16 +222,18 @@ namespace data_structures
 	{
 		std::vector<ReturnT> result;
 
-		result.reserve(buffer.size());
+		result.reserve(meta.size());
 
-		for (const auto& [distance, objectSize, destructor] : meta)
+		for (size_t i = 0; i < buffer.size();)
 		{
-			const Block& block = *reinterpret_cast<const Block*>(buffer.data() + distance);
+			const Block& block = *reinterpret_cast<const Block*>(buffer.data() + i);
 
 			if (predicate(*reinterpret_cast<const ClassT*>(&block.data)))
 			{
 				result.push_back(block.call<ClassT, FunctionT, ReturnT>(std::forward<Args>(args)...));
 			}
+
+			i += block.size + sizeof(size_t);
 		}
 
 		return result;

@@ -115,9 +115,10 @@ namespace data_structures
 		for (size_t i = index + 1; i < meta.size(); i++)
 		{
 			meta[i].distance -= objectSize;
+			meta[i].distance -= sizeof(size_t);
 		}
 
-		buffer.erase(buffer.begin() + distance, buffer.begin() + distance + objectSize);
+		buffer.erase(buffer.begin() + distance, buffer.begin() + distance + objectSize + sizeof(size_t));
 
 		meta.erase(meta.begin() + index);
 	}

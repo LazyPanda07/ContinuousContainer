@@ -103,16 +103,16 @@ TEST(ContinuousContainer, Remove)
 
 	for (size_t i = 0; i < 100; i++)
 	{
-		results.push_back(container.add<Derived>("1000").get());
+		results.push_back(container.add<Derived>("5").get());
 	}
 
 	for (size_t i = 0; i < 10; i++)
 	{
 		container.remove(i);
-		container.remove(i + 100);
+		container.remove(i + 10);
 
 		results.erase(results.begin() + i);
-		results.erase(results.begin() + i + 100);
+		results.erase(results.begin() + i + 10);
 	}
 
 	ASSERT_TRUE(std::ranges::equal(container.call<BaseClass, &BaseClass::get, int>(), results));
@@ -284,9 +284,11 @@ TEST(ContinuousContainer, Speed)
 
 			for (size_t i = 0; i < runs; i++)
 			{
-				for (size_t j = 0; j < container.size(); j++)
+				std::vector<int> temp = container.call<BaseClass, &BaseClass::get, int>();
+
+				for (int value : temp)
 				{
-					result += container.get<BaseClass>(j).get();
+					result += value;
 				}
 			}
 		}
