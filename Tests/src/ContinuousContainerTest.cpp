@@ -241,16 +241,16 @@ TEST(ContinuousContainer, Speed)
 
 	double first = 0.0;
 	double second = 0.0;
-	size_t result = 0;
+	size_t firstResult = 0;
+	size_t secondResult = 0;
 	size_t runs = 10'000;
 
 	{
 		std::vector<std::unique_ptr<BaseClass>> container;
 
-		for (size_t i = 0; i < 100'000; i++)
+		for (size_t i = 0; i < 500'000; i++)
 		{
 			container.push_back(std::make_unique<BaseClass>());
-			container.push_back(std::make_unique<Derived>(std::to_string(i)));
 			container.push_back(std::make_unique<AnotherDerived>(static_cast<double>(i), static_cast<double>(i * 2)));
 		}
 
@@ -261,21 +261,18 @@ TEST(ContinuousContainer, Speed)
 			{
 				for (size_t j = 0; j < container.size(); j++)
 				{
-					result += container[j]->get();
+					firstResult += container[j]->get();
 				}
 			}
 		}
 	}
 
-	result = 0;
-
 	{
 		data_structures::ContinuousContainer container;
 
-		for (size_t i = 0; i < 100'000; i++)
+		for (size_t i = 0; i < 500'000; i++)
 		{
 			container.push_back<BaseClass>();
-			container.push_back<Derived>(std::to_string(i));
 			container.push_back<AnotherDerived>(static_cast<double>(i), static_cast<double>(i * 2));
 		}
 
@@ -288,7 +285,7 @@ TEST(ContinuousContainer, Speed)
 
 				for (int value : temp)
 				{
-					result += value;
+					secondResult += value;
 				}
 			}
 		}
@@ -296,6 +293,7 @@ TEST(ContinuousContainer, Speed)
 
 	std::cout << "Pointers: " << first << " seconds" << std::endl << "ContinuousContainer: " << second << " seconds" << std::endl;
 
+	ASSERT_TRUE(firstResult == secondResult);
 	ASSERT_TRUE(first > second);
 }
 
