@@ -40,7 +40,7 @@ int AnotherDerived::get() const
 
 void AnotherDerived::increase(size_t& value) const
 {
-	value += first + second;
+	value += static_cast<size_t>(first + second);
 }
 
 Accumulated::Accumulated(int& out, int value) :

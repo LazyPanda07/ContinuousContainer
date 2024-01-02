@@ -183,13 +183,13 @@ namespace data_structures
 	}
 
 	template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
-	void ContinuousContainer::call(std::vector<ReturnT>& result, Args&&... args) const
+	void ContinuousContainer::call(const std::function<void(const ReturnT&)>& callback, Args&&... args) const
 	{
 		for (size_t i = 0; i < buffer.size();)
 		{
 			const Block& block = *reinterpret_cast<const Block*>(buffer.data() + i);
 
-			result.push_back(block.call<ClassT, FunctionT, ReturnT>(std::forward<Args>(args)...));
+			callback((block.call<ClassT, FunctionT, ReturnT>(std::forward<Args>(args)...)));
 
 			i += block.size + sizeof(size_t);
 		}
@@ -212,7 +212,7 @@ namespace data_structures
 	}
 
 	template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
-	void ContinuousContainer::callIf(std::vector<ReturnT>& result, const std::function<bool(const ClassT&)>& predicate, Args&&... args) const
+	void ContinuousContainer::callIf(const std::function<void(const ReturnT&)>& callback, const std::function<bool(const ClassT&)>& predicate, Args&&... args) const
 	{
 		for (size_t i = 0; i < buffer.size();)
 		{
@@ -220,7 +220,7 @@ namespace data_structures
 
 			if (predicate(*reinterpret_cast<const ClassT*>(&block.data)))
 			{
-				result.push_back(block.call<ClassT, FunctionT, ReturnT>(std::forward<Args>(args)...));
+				callback(push_back(block.call<ClassT, FunctionT, ReturnT>(std::forward<Args>(args)...)));
 			}
 
 			i += block.size + sizeof(size_t);

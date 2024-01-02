@@ -64,16 +64,16 @@ namespace data_structures
 
 			/**
 			 * @brief Get value
-			 * @tparam T 
-			 * @return 
+			 * @tparam T
+			 * @return
 			*/
 			template<typename T>
 			T& as();
 
 			/**
 			 * @brief Get value
-			 * @tparam T 
-			 * @return 
+			 * @tparam T
+			 * @return
 			*/
 			template<typename T>
 			const T& as() const;
@@ -109,8 +109,8 @@ namespace data_structures
 
 			/**
 			 * @brief Get value
-			 * @tparam T 
-			 * @return 
+			 * @tparam T
+			 * @return
 			*/
 			template<typename T>
 			const T& as() const;
@@ -135,143 +135,143 @@ namespace data_structures
 	public:
 		/**
 		 * @brief Create container with preallocated memory storage
-		 * @param capacity 
+		 * @param capacity
 		*/
 		ContinuousContainer(size_t capacity = 0);
 
 		/**
 		 * @brief Create container with objects
-		 * @tparam T 
-		 * @param objects 
+		 * @tparam T
+		 * @param objects
 		*/
 		template<typename T>
 		ContinuousContainer(std::initializer_list<T> objects);
 
 		/**
 		 * @brief Create object
-		 * @tparam T 
-		 * @tparam ...Args 
-		 * @param ...args 
-		 * @return 
+		 * @tparam T
+		 * @tparam ...Args
+		 * @param ...args
+		 * @return
 		*/
 		template<typename T, typename... Args>
 		T& add(Args&&... args);
 
 		/**
 		 * @brief Create object
-		 * @tparam T 
-		 * @tparam ...Args 
-		 * @param ...args 
-		 * @return 
+		 * @tparam T
+		 * @tparam ...Args
+		 * @param ...args
+		 * @return
 		*/
 		template<typename T, typename... Args>
 		T& push_back(Args&&... args);
 
 		/**
 		 * @brief Delete object at index
-		 * @param index 
+		 * @param index
 		*/
 		void remove(size_t index);
 
 		/**
 		 * @brief Delete object with iterator
-		 * @param iterator 
+		 * @param iterator
 		*/
 		void remove(const ContinuousContainerIterator& iterator);
 
 		/**
 		 * @brief Delete object with iterator
-		 * @param iterator 
+		 * @param iterator
 		*/
 		void remove(const ConstContinuousContainerIterator& iterator);
 
 		/**
 		 * @brief Create and insert object at index
-		 * @tparam T 
-		 * @tparam ...Args 
-		 * @param index 
-		 * @param ...args 
-		 * @return 
+		 * @tparam T
+		 * @tparam ...Args
+		 * @param index
+		 * @param ...args
+		 * @return
 		*/
 		template<typename T, typename... Args>
 		T& insert(size_t index, Args&&... args);
 
 		/**
 		 * @brief Create and insert object with iterator
-		 * @tparam T 
-		 * @tparam ...Args 
-		 * @param iterator 
-		 * @param ...args 
-		 * @return 
+		 * @tparam T
+		 * @tparam ...Args
+		 * @param iterator
+		 * @param ...args
+		 * @return
 		*/
 		template<typename T, typename... Args>
 		T& insert(const ContinuousContainerIterator& iterator, Args&&... args);
 
 		/**
 		 * @brief Create and insert object with iterator
-		 * @tparam T 
-		 * @tparam ...Args 
-		 * @param iterator 
-		 * @param ...args 
-		 * @return 
+		 * @tparam T
+		 * @tparam ...Args
+		 * @param iterator
+		 * @param ...args
+		 * @return
 		*/
 		template<typename T, typename... Args>
 		T& insert(const ConstContinuousContainerIterator& iterator, Args&&... args);
 
 		/**
 		 * @brief Get first element
-		 * @tparam T 
-		 * @return 
+		 * @tparam T
+		 * @return
 		*/
 		template<typename T>
 		T& front();
 
 		/**
 		 * @brief Get first element
-		 * @tparam T 
-		 * @return 
+		 * @tparam T
+		 * @return
 		*/
 		template<typename T>
 		const T& front() const;
 
 		/**
 		 * @brief Get last element
-		 * @tparam T 
-		 * @return 
+		 * @tparam T
+		 * @return
 		*/
 		template<typename T>
 		T& back();
 
 		/**
 		 * @brief Get last element
-		 * @tparam T 
-		 * @return 
+		 * @tparam T
+		 * @return
 		*/
 		template<typename T>
 		const T& back() const;
 
 		/**
 		 * @brief Call class member function for each object
-		 * @tparam ClassT 
-		 * @tparam ...Args 
-		 * @tparam FunctionT 
-		 * @param ...args 
+		 * @tparam ClassT
+		 * @tparam ...Args
+		 * @tparam FunctionT
+		 * @param ...args
 		*/
 		template<typename ClassT, auto FunctionT, typename... Args>
 		void call(Args&&... args) const;
 
 		/**
 		 * @brief Call class member function for each object with return value
-		 * @tparam ClassT 
-		 * @tparam ReturnT 
-		 * @tparam ...Args 
-		 * @tparam FunctionT 
-		 * @param result 
-		 * @param ...args 
-		 * @return 
+		 * @tparam ClassT
+		 * @tparam ReturnT
+		 * @tparam ...Args
+		 * @tparam FunctionT
+		 * @param callback
+		 * @param ...args
+		 * @return
 		*/
 		template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
-		void call(std::vector<ReturnT>& result, Args&&... args) const;
+		void call(const std::function<void(const ReturnT&)>& callback, Args&&... args) const;
 
 		/**
 		 * @brief Call class member function for each object if predicate returns true
@@ -289,39 +289,39 @@ namespace data_structures
 		 * @tparam ReturnT
 		 * @tparam ...Args
 		 * @tparam FunctionT
-		 * @param result 
+		 * @param callback
 		 * @param ...args
 		 * @return
 		*/
 		template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
-		void callIf(std::vector<ReturnT>& result, const std::function<bool(const ClassT&)>& predicate, Args&&... args) const;
+		void callIf(const std::function<void(const ReturnT&)>& callback, const std::function<bool(const ClassT&)>& predicate, Args&&... args) const;
 
 		/**
 		 * @brief Find element by predicate
-		 * @tparam T 
-		 * @param predicate 
-		 * @return 
+		 * @tparam T
+		 * @param predicate
+		 * @return
 		*/
 		template<typename T>
 		T* find(const std::function<bool(const T&)>& predicate) const;
 
 		/**
 		 * @brief Returns amount of objects in container
-		 * @return 
+		 * @return
 		*/
 		size_t size() const;
 
 		/**
 		 * @brief Returns size in bytes of container
-		 * @return 
+		 * @return
 		*/
 		size_t sizeInBytes() const;
 
 		/**
 		 * @brief Get object from container with index check
-		 * @tparam T 
-		 * @param index 
-		 * @return 
+		 * @tparam T
+		 * @param index
+		 * @return
 		 * @exception std::out_of_range
 		*/
 		template<typename T>
@@ -348,9 +348,9 @@ namespace data_structures
 
 		/**
 		 * @brief Get object from container
-		 * @tparam T 
-		 * @param index 
-		 * @return 
+		 * @tparam T
+		 * @param index
+		 * @return
 		*/
 		template<typename T>
 		const T& get(size_t index) const;
