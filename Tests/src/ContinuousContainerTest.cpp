@@ -259,10 +259,17 @@ TEST(ContinuousContainer, Speed)
 
 			for (size_t i = 0; i < runs; i++)
 			{
+				for (const std::unique_ptr<BaseClass>& value : container)
+				{
+					value->increase(firstResult);
+				}
+
+				/*
 				for (size_t j = 0; j < container.size(); j++)
 				{
 					firstResult += container[j]->get();
 				}
+				*/
 			}
 		}
 	}
@@ -281,12 +288,16 @@ TEST(ContinuousContainer, Speed)
 
 			for (size_t i = 0; i < runs; i++)
 			{
+				container.call<BaseClass, &BaseClass::increase>(secondResult);
+
+				/*
 				std::vector<int> temp = container.call<BaseClass, &BaseClass::get, int>();
 
 				for (int value : temp)
 				{
 					secondResult += value;
 				}
+				*/
 			}
 		}
 	}

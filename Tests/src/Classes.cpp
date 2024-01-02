@@ -5,6 +5,11 @@ int BaseClass::get() const
 	return 5;
 }
 
+void BaseClass::increase(size_t& value) const
+{
+	value += 5;
+}
+
 Derived::Derived(const std::string& value) :
 	value(value)
 {
@@ -14,6 +19,11 @@ Derived::Derived(const std::string& value) :
 int Derived::get() const
 {
 	return std::stol(value);
+}
+
+void Derived::increase(size_t& value) const
+{
+	value += std::stol(this->value);
 }
 
 AnotherDerived::AnotherDerived(double first, double second) :
@@ -26,6 +36,11 @@ AnotherDerived::AnotherDerived(double first, double second) :
 int AnotherDerived::get() const
 {
 	return static_cast<int>(first + second);
+}
+
+void AnotherDerived::increase(size_t& value) const
+{
+	value += first + second;
 }
 
 Accumulated::Accumulated(int& out, int value) :

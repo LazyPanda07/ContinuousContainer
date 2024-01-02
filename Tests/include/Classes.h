@@ -10,6 +10,8 @@ public:
 
 	virtual int get() const;
 
+	virtual void increase(size_t& value) const;
+
 	virtual ~BaseClass() = default;
 };
 
@@ -22,6 +24,8 @@ public:
 	Derived(const std::string& value);
 
 	int get() const override;
+
+	void increase(size_t& value) const override;
 
 	~Derived() = default;
 };
@@ -36,6 +40,8 @@ public:
 	AnotherDerived(double first, double second);
 
 	int get() const override;
+
+	void increase(size_t& value) const override;
 
 	~AnotherDerived() = default;
 };
