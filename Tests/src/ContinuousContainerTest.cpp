@@ -314,6 +314,10 @@ TEST(ContinuousContainer, SpeedWithReturnValue)
 	size_t secondResult = 0;
 	size_t runs = 10'000;
 
+	using namespace std::chrono_literals;
+
+	std::this_thread::sleep_for(20s);
+
 	{
 		std::vector<std::unique_ptr<BaseClass>> container;
 
@@ -350,10 +354,7 @@ TEST(ContinuousContainer, SpeedWithReturnValue)
 			{
 				Timer timer(second);
 
-				for (size_t j = 0; j < container.size(); j++)
-				{
-					secondResult += container.get<BaseClass>(j).get();
-				}
+				container.call<BaseClass, &BaseClass::get, int>([&secondResult](int value) { secondResult += value; });
 			}
 		}
 	}
