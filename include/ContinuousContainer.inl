@@ -189,7 +189,7 @@ namespace data_structures
 		{
 			const Block& block = *reinterpret_cast<const Block*>(buffer.data() + i);
 
-			callback((block.call<ClassT, FunctionT, ReturnT>(std::forward<Args>(args)...)));
+			callback(block.call<ClassT, FunctionT, ReturnT>(std::forward<Args>(args)...));
 
 			i += block.size + sizeof(size_t);
 		}
@@ -220,7 +220,7 @@ namespace data_structures
 
 			if (predicate(*reinterpret_cast<const ClassT*>(&block.data)))
 			{
-				callback(push_back(block.call<ClassT, FunctionT, ReturnT>(std::forward<Args>(args)...)));
+				callback(block.call<ClassT, FunctionT, ReturnT>(std::forward<Args>(args)...));
 			}
 
 			i += block.size + sizeof(size_t);
