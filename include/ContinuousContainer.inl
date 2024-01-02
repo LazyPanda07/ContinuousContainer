@@ -193,8 +193,6 @@ namespace data_structures
 
 			i += block.size + sizeof(size_t);
 		}
-
-		return result;
 	}
 
 	template<typename ClassT, auto FunctionT, typename... Args>
@@ -227,8 +225,6 @@ namespace data_structures
 
 			i += block.size + sizeof(size_t);
 		}
-
-		return result;
 	}
 
 	template<typename T>
