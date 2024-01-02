@@ -170,7 +170,7 @@ namespace data_structures
 	}
 
 	template<typename ClassT, auto FunctionT, typename... Args>
-	void ContinuousContainer::call(Args&&... args) const
+	inline void ContinuousContainer::call(Args&&... args) const
 	{
 		for (size_t i = 0; i < buffer.size();)
 		{
@@ -183,7 +183,7 @@ namespace data_structures
 	}
 
 	template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
-	void ContinuousContainer::call(const std::function<void(const ReturnT&)>& callback, Args&&... args) const
+	inline void ContinuousContainer::call(const std::function<void(const ReturnT&)>& callback, Args&&... args) const
 	{
 		for (size_t i = 0; i < buffer.size();)
 		{
@@ -196,7 +196,7 @@ namespace data_structures
 	}
 
 	template<typename ClassT, auto FunctionT, typename... Args>
-	void ContinuousContainer::callIf(const std::function<bool(const ClassT&)>& predicate, Args&&... args) const
+	inline void ContinuousContainer::callIf(const std::function<bool(const ClassT&)>& predicate, Args&&... args) const
 	{
 		for (size_t i = 0; i < buffer.size();)
 		{
@@ -212,7 +212,7 @@ namespace data_structures
 	}
 
 	template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
-	void ContinuousContainer::callIf(const std::function<void(const ReturnT&)>& callback, const std::function<bool(const ClassT&)>& predicate, Args&&... args) const
+	inline void ContinuousContainer::callIf(const std::function<void(const ReturnT&)>& callback, const std::function<bool(const ClassT&)>& predicate, Args&&... args) const
 	{
 		for (size_t i = 0; i < buffer.size();)
 		{

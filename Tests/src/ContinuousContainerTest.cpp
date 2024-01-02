@@ -89,7 +89,7 @@ TEST(ContinuousContainer, LargeContainer)
 		results.push_back(container.add<AnotherDerived>(0.5, 0.5).get());
 	}
 
-	container.call<BaseClass, &BaseClass::get, int>([&containerResults](const int& value) { containerResults.push_back(value); });
+	container.call<BaseClass, &BaseClass::get, int>([&containerResults](int value) { containerResults.push_back(value); });
 
 	ASSERT_TRUE(std::ranges::equal(containerResults, results));
 }
@@ -119,7 +119,7 @@ TEST(ContinuousContainer, Remove)
 		results.erase(results.begin() + i + 10);
 	}
 
-	container.call<BaseClass, &BaseClass::get, int>([&containerResults](const int& value) { containerResults.push_back(value); });
+	container.call<BaseClass, &BaseClass::get, int>([&containerResults](int value) { containerResults.push_back(value); });
 
 	ASSERT_TRUE(std::ranges::equal(containerResults, results));
 }
@@ -223,7 +223,7 @@ TEST(ContinuousContainer, Call)
 
 	std::vector<int> result;
 
-	container.call<BaseClass, &BaseClass::get, int>([&result](const int& value) { result.push_back(value); });
+	container.call<BaseClass, &BaseClass::get, int>([&result](int value) { result.push_back(value); });
 
 	ASSERT_TRUE(result.size() == 3);
 }
@@ -238,7 +238,7 @@ TEST(ContinuousContainer, CallIf)
 
 	std::vector<int> result;
 
-	container.callIf<BaseClass, &BaseClass::get, int>([&result](const int& value) { result.push_back(value); }, [](const BaseClass& object) { return object.get() > 5; });
+	container.callIf<BaseClass, &BaseClass::get, int>([&result](int value) { result.push_back(value); }, [](const BaseClass& object) { return object.get() > 5; });
 
 	ASSERT_TRUE(result.size() == 1);
 }
@@ -350,7 +350,7 @@ TEST(ContinuousContainer, SpeedWithReturnValue)
 			{
 				Timer timer(second);
 
-				container.call<BaseClass, &BaseClass::get, int>([&secondResult](const int& value) { secondResult += value; });
+				container.call<BaseClass, &BaseClass::get, int>([&secondResult](int value) { secondResult += value; });
 			}
 		}
 	}
