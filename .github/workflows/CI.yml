@@ -82,8 +82,8 @@ jobs:
       # if: ${{ env.CURRENT_BRANCH == 'master' }}
       uses: actions/download-artifact@v3
       
-    - name: Dir
-      run: dir
+    - name: Print variable name
+      run: echo ${{ env.CONTINUOUS_CONTAINER_ARCHIVE_NAME }}
 
     - name: Create zip
       # if: ${{ env.CURRENT_BRANCH == 'master' }}

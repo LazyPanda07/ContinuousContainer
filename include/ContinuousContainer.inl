@@ -183,12 +183,8 @@ namespace data_structures
 	}
 
 	template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
-	std::vector<ReturnT> ContinuousContainer::call(Args&&... args) const
+	void ContinuousContainer::call(std::vector<ReturnT>& result, Args&&... args) const
 	{
-		std::vector<ReturnT> result;
-
-		result.reserve(meta.size());
-
 		for (size_t i = 0; i < buffer.size();)
 		{
 			const Block& block = *reinterpret_cast<const Block*>(buffer.data() + i);
@@ -218,12 +214,8 @@ namespace data_structures
 	}
 
 	template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
-	std::vector<ReturnT> ContinuousContainer::callIf(const std::function<bool(const ClassT&)>& predicate, Args&&... args) const
+	void ContinuousContainer::callIf(std::vector<ReturnT>& result, const std::function<bool(const ClassT&)>& predicate, Args&&... args) const
 	{
-		std::vector<ReturnT> result;
-
-		result.reserve(meta.size());
-
 		for (size_t i = 0; i < buffer.size();)
 		{
 			const Block& block = *reinterpret_cast<const Block*>(buffer.data() + i);

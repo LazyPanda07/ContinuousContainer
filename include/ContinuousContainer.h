@@ -266,11 +266,12 @@ namespace data_structures
 		 * @tparam ReturnT 
 		 * @tparam ...Args 
 		 * @tparam FunctionT 
+		 * @param result 
 		 * @param ...args 
 		 * @return 
 		*/
 		template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
-		std::vector<ReturnT> call(Args&&... args) const;
+		void call(std::vector<ReturnT>& result, Args&&... args) const;
 
 		/**
 		 * @brief Call class member function for each object if predicate returns true
@@ -288,11 +289,12 @@ namespace data_structures
 		 * @tparam ReturnT
 		 * @tparam ...Args
 		 * @tparam FunctionT
+		 * @param result 
 		 * @param ...args
 		 * @return
 		*/
 		template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
-		std::vector<ReturnT> callIf(const std::function<bool(const ClassT&)>& predicate, Args&&... args) const;
+		void callIf(std::vector<ReturnT>& result, const std::function<bool(const ClassT&)>& predicate, Args&&... args) const;
 
 		/**
 		 * @brief Find element by predicate

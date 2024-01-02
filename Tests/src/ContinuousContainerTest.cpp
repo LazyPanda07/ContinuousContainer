@@ -72,6 +72,7 @@ TEST(ContinuousContainer, LargeContainer)
 {
 	data_structures::ContinuousContainer container;
 	std::vector<int> results;
+	std::vector<int> containerResults;
 
 	for (size_t i = 0; i < 10'000; i++)
 	{
@@ -88,13 +89,16 @@ TEST(ContinuousContainer, LargeContainer)
 		results.push_back(container.add<AnotherDerived>(0.5, 0.5).get());
 	}
 
-	ASSERT_TRUE(std::ranges::equal(container.call<BaseClass, &BaseClass::get, int>(), results));
+	container.call<BaseClass, &BaseClass::get, int>(containerResults);
+
+	ASSERT_TRUE(std::ranges::equal(containerResults, results));
 }
 
 TEST(ContinuousContainer, Remove)
 {
 	data_structures::ContinuousContainer container;
 	std::vector<int> results;
+	std::vector<int> containerResults;
 
 	for (size_t i = 0; i < 100; i++)
 	{
@@ -115,7 +119,9 @@ TEST(ContinuousContainer, Remove)
 		results.erase(results.begin() + i + 10);
 	}
 
-	ASSERT_TRUE(std::ranges::equal(container.call<BaseClass, &BaseClass::get, int>(), results));
+	container.call<BaseClass, &BaseClass::get, int>(containerResults);
+
+	ASSERT_TRUE(std::ranges::equal(containerResults, results));
 }
 
 TEST(ContinuousContainer, Iterators)
@@ -215,7 +221,9 @@ TEST(ContinuousContainer, Call)
 	container.add<Derived>("123");
 	container.add<AnotherDerived>(0.15, 0.85);
 
-	std::vector<int> result = container.call<BaseClass, &BaseClass::get, int>();
+	std::vector<int> result;
+	
+	container.call<BaseClass, &BaseClass::get, int>(result);
 
 	ASSERT_TRUE(result.size() == 3);
 }
@@ -228,7 +236,9 @@ TEST(ContinuousContainer, CallIf)
 	container.add<Derived>("123");
 	container.add<AnotherDerived>(0.15, 0.85);
 
-	std::vector<int> result = container.callIf<BaseClass, &BaseClass::get, int>([](const BaseClass& object) { return object.get() > 5; });
+	std::vector<int> result;
+	
+	container.callIf<BaseClass, &BaseClass::get, int>(result, [](const BaseClass& object) { return object.get() > 5; });
 
 	ASSERT_TRUE(result.size() == 1);
 }
@@ -263,13 +273,6 @@ TEST(ContinuousContainer, Speed)
 				{
 					value->increase(firstResult);
 				}
-
-				/*
-				for (size_t j = 0; j < container.size(); j++)
-				{
-					firstResult += container[j]->get();
-				}
-				*/
 			}
 		}
 	}
@@ -289,15 +292,74 @@ TEST(ContinuousContainer, Speed)
 			for (size_t i = 0; i < runs; i++)
 			{
 				container.call<BaseClass, &BaseClass::increase>(secondResult);
+			}
+		}
+	}
 
-				/*
-				std::vector<int> temp = container.call<BaseClass, &BaseClass::get, int>();
+	std::cout << "Pointers: " << first << " seconds" << std::endl << "ContinuousContainer: " << second << " seconds" << std::endl;
+
+	ASSERT_TRUE(firstResult == secondResult);
+	ASSERT_TRUE(first > second);
+}
+
+TEST(ContinuousContainer, SpeedWithReturnValue)
+{
+#ifndef NDEBUG
+	return;
+#endif
+
+	double first = 0.0;
+	double second = 0.0;
+	size_t firstResult = 0;
+	size_t secondResult = 0;
+	size_t runs = 10'000;
+
+	{
+		std::vector<std::unique_ptr<BaseClass>> container;
+
+		for (size_t i = 0; i < 500'000; i++)
+		{
+			container.push_back(std::make_unique<BaseClass>());
+			container.push_back(std::make_unique<AnotherDerived>(static_cast<double>(i), static_cast<double>(i * 2)));
+		}
+
+		{
+			Timer timer(first);
+
+			for (size_t i = 0; i < runs; i++)
+			{
+				for (size_t j = 0; j < container.size(); j++)
+				{
+					firstResult += container[j]->get();
+				}
+			}
+		}
+	}
+
+	{
+		data_structures::ContinuousContainer container;
+
+		for (size_t i = 0; i < 500'000; i++)
+		{
+			container.push_back<BaseClass>();
+			container.push_back<AnotherDerived>(static_cast<double>(i), static_cast<double>(i * 2));
+		}
+
+		{
+			std::vector<int> temp;
+
+			temp.reserve(container.size());
+
+			Timer timer(second);
+
+			for (size_t i = 0; i < runs; i++)
+			{
+				container.call<BaseClass, &BaseClass::get, int>(temp);
 
 				for (int value : temp)
 				{
 					secondResult += value;
 				}
-				*/
 			}
 		}
 	}
