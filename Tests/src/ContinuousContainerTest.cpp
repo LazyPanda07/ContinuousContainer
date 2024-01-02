@@ -358,7 +358,7 @@ TEST(ContinuousContainer, SpeedWithReturnValue)
 	std::cout << "Pointers: " << first << " seconds" << std::endl << "ContinuousContainer: " << second << " seconds" << std::endl;
 
 	ASSERT_TRUE(firstResult == secondResult);
-	// ASSERT_TRUE(first > second);
+	ASSERT_TRUE(first > second);
 }
 
 TEST(ContinuousContainer, Destructor)

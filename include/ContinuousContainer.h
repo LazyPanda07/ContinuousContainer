@@ -271,7 +271,7 @@ namespace data_structures
 		 * @return
 		*/
 		template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
-		void call(const std::function<void(const ReturnT&)>& callback, Args&&... args) const;
+		void call(const std::function<void(ReturnT&&)>& callback, Args&&... args) const;
 
 		/**
 		 * @brief Call class member function for each object if predicate returns true
@@ -294,7 +294,7 @@ namespace data_structures
 		 * @return
 		*/
 		template<typename ClassT, auto FunctionT, typename ReturnT, typename... Args>
-		void callIf(const std::function<void(const ReturnT&)>& callback, const std::function<bool(const ClassT&)>& predicate, Args&&... args) const;
+		void callIf(const std::function<void(ReturnT&&)>& callback, const std::function<bool(const ClassT&)>& predicate, Args&&... args) const;
 
 		/**
 		 * @brief Find element by predicate
