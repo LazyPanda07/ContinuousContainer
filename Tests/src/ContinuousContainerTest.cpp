@@ -350,7 +350,10 @@ TEST(ContinuousContainer, SpeedWithReturnValue)
 			{
 				Timer timer(second);
 
-				container.call<BaseClass, &BaseClass::get, int>([&secondResult](int value) { secondResult += value; });
+				for (size_t j = 0; j < container.size(); j++)
+				{
+					secondResult += container.get<BaseClass>(j).get();
+				}
 			}
 		}
 	}
