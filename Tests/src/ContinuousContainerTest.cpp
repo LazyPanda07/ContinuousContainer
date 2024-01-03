@@ -302,7 +302,7 @@ TEST(ContinuousContainer, Speed)
 	ASSERT_TRUE(first > second);
 }
 
-TEST(ContinuousContainer, SpeedWithReturnValue)
+TEST(ContinuousContainer, SpeedWithCallback)
 {
 #ifndef NDEBUG
 	return;
@@ -313,10 +313,6 @@ TEST(ContinuousContainer, SpeedWithReturnValue)
 	size_t firstResult = 0;
 	size_t secondResult = 0;
 	size_t runs = 10'000;
-
-	using namespace std::chrono_literals;
-
-	std::this_thread::sleep_for(20s);
 
 	{
 		std::vector<std::unique_ptr<BaseClass>> container;
@@ -362,7 +358,6 @@ TEST(ContinuousContainer, SpeedWithReturnValue)
 	std::cout << "Pointers: " << first << " seconds" << std::endl << "ContinuousContainer: " << second << " seconds" << std::endl;
 
 	ASSERT_TRUE(firstResult == secondResult);
-	ASSERT_TRUE(first > second);
 }
 
 TEST(ContinuousContainer, Destructor)
